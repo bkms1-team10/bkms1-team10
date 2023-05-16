@@ -2,7 +2,27 @@
 <html>
 <!-- script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 <style>
-	#btn_join{	
+	html{
+		height: 100%;
+	}
+
+	body{
+		background-color: #424141;
+		position: relative;
+		margin:0;
+		width: 90%;
+		height: 90%;
+	}
+
+	.indexBox{
+		position: absolute;
+		top: 50%;
+		left: 55%;
+		margin:-150px 0 0 -150px;
+		text-align: center;
+	}
+
+	#btn_start{	
 		color: #313131 !important;
 		background-color: #FFFFFF !important;
 		border-color: #313131 !important;
@@ -10,9 +30,9 @@
 		transition-duration: 0.4s;
 	}
 
-	#btn_join:hover{
- 	color: #FFFFFF !important;
- 	background-color: #313131 !important;
+	#btn_start:hover{
+ 	color: #424141 !important;
+ 	background-color: #FFD585 !important;
 }
 
 	.button{
@@ -36,8 +56,10 @@
 <title>Landing Page</title>
 </head>
 <body>
-	<h1>Landing Page</h1>
-	<div class="btn_row">
-		<input type="button" class="button" id="btn_join" VALUE="시작하기" onClick="location.href='/login'">
+	<div class="indexBox">
+		<div class="logoBox">
+			<img class="logo" src="/static/images/indexLogo.png" alt="logo" width="350">
+		</div>
+		<input type="button" class="button" id="btn_start" VALUE="시작하기" onClick="location.href='/login'">
 	</div>
 </body>

@@ -21,7 +21,7 @@ def logout():
 @app.route('/join/')
 def join():
     ## 세션 정보 있으면 home로 이동
-    header='logout'
+    header='login'
     return render_template("/login/join.html", status=header)
 
 @app.route('/')

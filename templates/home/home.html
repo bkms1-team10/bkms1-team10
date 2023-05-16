@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<style>
+    #innerForm{
+        margin : auto;
+        width : 1080px;
+        min-width: 1080px;
+    }
+    h3{
+        text-align :left;
+        margin : 30px 5px;
+    }
+
+    .content-list{
+        margin-left: 0px;
+        padding-left: 0px;
+        padding-bottom: 20px;
+        display: grid;
+        grid-column-gap: 25px;
+        grid-auto-flow: column;
+        list-style: none;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+
+    }
+    
+    .content-list::-webkit-scrollbar {
+        background-color:transparent;
+        height: 12px;
+    }
+
+    .content-list:hover::-webkit-scrollbar-thumb,
+    .content-list::-webkit-scrollbar-track {
+        border-radius: 92px;
+    }
+
+    .content-list:hover::-webkit-scrollbar-thumb{
+        height: 12px;
+        background: #fd994070;
+    }
+
+    .content-list:hover::-webkit-scrollbar-track {
+        background: white;
+    }
+
+</style>        
+
+<head>
+<meta charset="UTF-8">
+<title>main page</title>
+</head>
+<body>
+	{% include 'header.html' %}
+	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
+	if (session_id != null)	response.sendRedirect("/product/list");
+	==> server.py에서 처리
+	-->
+	<div id="innerForm">
+        <div class="content-row">
+            <h2 class="content-title">평균 별점이 높은 책</h2>
+            <ul class="content-list">
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+            </ul>
+        </div>
+        <div class="content-row">
+            <h2 class="content-title">평균 별점이 높은 책</h2>
+            <ul class="content-list">
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+            </ul>
+        </div>
+
+        <div class="content-row">
+            <h2 class="content-title">평균 별점이 높은 책</h2>
+            <ul class="content-list">
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+            </ul>
+        </div>
+        <div class="content-row">
+            <h2 class="content-title">평균 별점이 높은 책</h2>
+            <ul class="content-list">
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+            </ul>
+        </div>
+        <div class="content-row">
+            <h2 class="content-title">평균 별점이 높은 책</h2>
+            <ul class="content-list">
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+                {% include 'book.html' %}
+            </ul>
+        </div>
+
+	</div>
+
+</body>

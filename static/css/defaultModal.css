@@ -1,0 +1,81 @@
+ /* The Modal (background) */
+ .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 101; /* Sit on top */
+    padding-top: 150px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor : pointer;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.space{
+    margin-top:40px;
+}
+
+
+/*logoutModal, share-deleteModal*/
+.btn_row{
+    text-align : right;
+}
+
+.btn{
+    font-size: 14px;
+    width: 70px;
+    border-radius: 10px;
+    margin-right: 9px;
+    padding : 10px 7px;
+    line-height: 23px;
+    display:inline;
+    cursor : pointer;
+    transition-duration: 0.4s;
+}
+
+.confirmBtn{
+    border : 1px solid  #313131;
+    background-color :  #313131;
+    color : #FFFFFF;        
+}
+
+.confirmBtn:hover{
+    opacity : 0.7;
+}
+
+.cancelBtn{
+    color: #313131 !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid #313131;
+    transition-duration: 0.4s;
+}
+
+.cancelBtn:hover{
+    color: #FFFFFF !important;
+     background-color: #313131 !important;
+}

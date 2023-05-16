@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="/static/css/defaultModal.css">
+<script>
+$(document).ready(function(){
+    $("#shareBtn").click(function(){
+        $("#myModal").css('display', 'block');
+    });
+
+    $("#close").click(function(){
+        $("#myModal").css('display', 'none');
+    });
+
+    $(document).keydown(function(event) {
+        if ( event.keyCode == 27 || event.which == 27 ) {
+            $(".modal").css('display', 'none');
+        }   
+    });
+});
+
+</script>
+<style>
+    #searchModal-content{
+        width: 750px;
+        min-width: 750px;
+        max-width: 750px;
+    }
+
+    .searchTitle{
+        margin-left:9px;
+    }
+
+    #searchForm{
+        margin-bottom: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        width : 700px;
+        border : 1px solid #BFBFBF;
+        padding : 10px 15px;
+    }
+
+    span{
+        width:30px;
+        vertical-align: middle;
+    }
+
+    .field{
+        font-size : 18px;
+        width: 660px;
+        line-height:24px;
+        border-color: transparent;
+        box-sizing : border-box;
+    }
+
+    .field:focus{
+        outline: none;    
+    }
+
+    /*
+    .btn_row{
+        text-align : right;
+        margin-bottom : 15px;
+    }
+
+    .btn{
+        font-size: 14px;
+        width: 70px;
+        border-radius: 10px;
+        margin-bottom: 18px;
+        margin-right: 9px;
+        padding : 10px 7px;
+        line-height: 23px;
+        display:inline;
+        cursor : pointer;
+        transition-duration: 0.4s;
+    }
+
+    #bookAddBtn{
+        border : 1px solid  #313131;
+        background-color :  #313131;
+        color : #FFFFFF;        
+    }
+
+    #bookAddBtn:hover{
+        opacity : 0.7;
+    }
+
+    #cancelBtn{
+        color: #313131 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #313131;
+        transition-duration: 0.4s;
+    }
+    
+    #cancelBtn:hover{
+        color: #FFFFFF !important;
+ 	    background-color: #313131 !important;
+    }
+*/    
+</style>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content" id="searchModal-content">
+      <span id="close" class="close">&times;</span>
+        <div class="space">
+        <h3 class="searchTitle">도서 검색하기</h3>
+            <form id="searchForm">
+                <span class='material-symbols-outlined'>Search</span>
+                <input type="text" class="field" id="search" name="search">
+            </form>
+        </div>
+        {% include '/share/bookTable.html' %}
+        
+        <!--
+        <div class="btn_row">
+            <button class="btn" id="bookAddBtn">추가하기</button>
+            <button class="btn" id="cancelBtn">취소</button>
+        </div>
+        -->
+    </div>
+  
+</div>

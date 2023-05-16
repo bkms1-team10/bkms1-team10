@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="/static/css/defaultModal.css">
+<script>
+    $(document).ready(function(){
+        $(".content-item").click(function(){
+            $("#deleteModal").css('display', 'block');
+        });
+    
+        $("#deleteClose").click(function(){
+            $("#deleteModal").css('display', 'none');
+        });
+
+        $("#cancelBtn").click(function(){
+            $("#deleteModal").css('display', 'none');
+        });
+
+        $("#deleteBtn").click(function(){
+            location.href("/");
+        });
+    });
+    
+</script>
+
+<style>
+    #deleteModal-content {
+        width: 500px;
+        min-width: 500px;
+        max-width: 500px;
+    }
+    
+    .space > p{
+        text-align: center;
+        margin: 50px 0px;
+    }
+    
+</style>    
+    <!-- The Modal -->
+    <div id="deleteModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" id="deleteModal-content">
+          <span id="deleteClose" class="close">&times;</span>
+            <div class="space">
+            <p>선택한 책을 목록에서 삭제하시겠습니까?</p>
+            <div class="btn_row">
+                <button class="btn confirmBtn" id="deleteBtn">삭제</button>
+                <button class="btn cancelBtn" id="cancelBtn">취소</button>
+            </div>
+        </div>
+      
+    </div>

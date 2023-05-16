@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+function loginCheck(){
+	if(document.getElementById("userID").value == ''){
+		alert("아이디를 입력하세요");
+		document.getElementById("userID").focus();
+		return false;
+	}
+	if(document.getElementById("password").value == ''){
+		alert("패스워드를 입력하세요");
+		document.getElementById("password").focus();
+		return false;
+	}
+	document.loginForm.action = '/login/loginCheck';
+	document.loginForm.submit();
+}
+</script>
+
+<style>
+#loginForm{
+	margin : auto;
+	min-width : 700px;
+}
+
+#innerForm{
+	margin : auto;
+	width : 400px;
+}
+h3{
+	text-align :left;
+	margin : 30px 5px;
+}
+
+.field{
+	font-size : 14px;
+	line-height:23px;
+	width : 100%;
+	border : 1px solid #BFBFBF;
+	padding : 10px 15px;
+	box-sizing : border-box;
+}
+
+input:focus{
+    outline: none;
+}
+
+.row{
+	margin : 0px 5px;
+	font-size : 14px;
+	line-height : 17px;
+	margin-bottom : 20px;
+}
+
+.rowFind{
+	margin : 20px 0px 30px;
+	text-align : right;
+}
+
+.title{
+	display : block;
+	margin-bottom : 12px;
+	line-height : 17px;
+	letter-spacing : -0.1em;
+}
+
+.btn_row{
+	text-align : center;
+	margin-bottom : 15px;
+}
+
+.button{
+	padding: 5px;
+	margin : auto;
+	cursor : pointer;
+	border-radius : 50px;
+	width : 100%;
+	max-width : 240px;
+	min-width : 160px;
+	height : 54px ! important;
+	min-height : 54px;
+	font-size : 14px !important;
+	font-weight : 700;
+}
+
+.btn_box{
+	margin-top : 40px;
+}
+
+#btn_login{
+	color: #FFFFFF !important;
+    background-color: #313131 !important;
+    border-color: #313131 !important;
+    border-width : 1px;
+    transition-duration: 0.4s;
+}
+
+#btn_join{
+	color: #313131 !important;
+    background-color: #FFFFFF !important;
+    border-color: #313131 !important;
+    border-width : 1px;
+    transition-duration: 0.4s;
+}
+
+#btn_login:hover{
+ 	opacity : 0.7;
+}
+
+#btn_join:hover{
+ 	color: #FFFFFF !important;
+ 	background-color: #313131 !important;
+}
+
+.findPW{
+	display : inline;
+    font-size: 13px;
+    line-height: 17px;
+    margin: 20px 6px 30px;
+    color: #666666;
+    cursor:pointer;
+}
+
+.msg{
+	font-size:12px;
+	color : red;
+}
+	
+
+</style>
+
+<head>
+<meta charset="UTF-8">
+<title>로그인</title>
+</head>
+<body>
+	{% include 'header.html' %}
+	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
+	if (session_id != null)	response.sendRedirect("/product/list");
+	==> server.py에서 처리
+	-->
+		<form method="post" id="loginForm" name="loginForm">
+		<div id="innerForm">
+		<h3>로그인</h3>
+		<div class="row">
+			<label class= "title">아이디</label>
+			<input type="text" class="field" id="userID" name="userID" autofocus>
+			<c:if test="${message == 'ID_NOT_FOUND' }">
+			<div id="msg_id" class="msg"> 존재하지 않는 아이디입니다.</div>
+			</c:if>
+		</div>
+		<div class="row">
+			<label class= "title">비밀번호</label>
+			<input type="password" class="field" id="password" name="password">
+			<c:if test="${message == 'PASSWORD_NOT_FOUND' }">
+			<div id="msg_password" class="msg">잘못된 패스워드 입니다.</div>
+			</c:if>
+		</div>
+		<div class="rowFind">	
+		</div>
+		</div>
+		</form>
+		<div class="btn_box">
+		<div class="btn_row">
+			<input type="button" class="button" id="btn_login" NAME="Submit" VALUE="로그인하기" onclick="loginCheck()">
+		</div>
+		<div class="btn_row">
+			<input type="button" class="button" id="btn_join" VALUE="회원 가입하기" onClick="location.href='/join'">
+		</div>
+		</div>
+</body>

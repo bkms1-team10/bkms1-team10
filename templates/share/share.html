@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+    #innerForm{
+        margin : auto;
+        width : 1080px;
+        min-width: 1080px;
+    }
+    .row{
+        margin: 30px 0px;
+        display: flex;
+    }
+    .titleBox{
+        display: inline-block;
+        height:29px;
+        flex: 1;
+    }
+    
+    .hidden{
+        flex: 1;
+    }
+    .shareBtn{
+        display: inline-block;
+        height:fit-content;
+        background-color: transparent;
+        border: transparent;
+    }
+
+    .shareBtn > .material-symbols-outlined{
+        font-size: 3em;
+        color: #626060;
+    }
+    
+</style>        
+
+<head>
+<meta charset="UTF-8">
+<title>Book Share</title>
+</head>
+<body>
+	{% include 'header.html' %}
+	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
+	if (session_id != null)	response.sendRedirect("/product/list");
+	==> server.py에서 처리
+	-->
+	<div id="innerForm">
+        <div class='row'>
+            <div class="titleBox">
+            <h2 class="title">북 쉐어하기</h2>
+            </div>
+            <div class="hidden"></div>
+            <button class='shareBtn' id="shareBtn"><span class='material-symbols-outlined'>add_box</span></button>
+            {% include '/share/searchModal.html' %}
+        </div>
+        {% include '/share/shareList.html' %}
+	</div>
+
+</body>

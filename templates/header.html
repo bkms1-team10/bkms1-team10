@@ -1,0 +1,153 @@
+<!--
+해야할 일
+1. 로그인 안하면(session 정보 없으면) 메뉴 눌러도 모두 login으로 => server.py에서 할 수 있을듯
+2. 로그인 시(session 정보 존재) 우측 상단 아이콘 로그아웃으로 변경 = 태그 내 login을 logout으로 변경 (완)
+3. 로그아웃 기능 추가(session 정보 삭제)
+-->
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" />
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.5/dist/web/static/pretendard.css");
+
+*{
+	font-family: Pretendard;
+}
+
+ header{
+  	position: fixed;
+  	top: 0;
+  	left: 0;
+  	right: 0;
+ 	width : 100%;
+    min-width : 700px;
+    max-width : 1240px;
+    display : flex;
+    padding : 10px 20px;
+    align-items : center;
+    margin : auto;
+	background-color: white;
+    z-index: 100;
+ }
+ 
+ .menu-backgroud-color{
+ 	background-color: #FFFFFF !important;
+	z-index: 1000;
+ }
+ 
+ .hiddin-box{
+  	top: 0;
+  	left: 0;
+  	right: 0;
+ 	width : 100%;
+    min-width : 700px;
+    max-width : 1200px;
+    display : flex;
+    padding : 50px 20px;
+ }
+ 
+ li a { text-decoration: none;}
+ li a:visited { text-decoration: none; }
+ li a:focus { text-decoration: none; }
+
+
+.center, .right, .left{
+  	display : flex;
+ }
+
+ ul{
+ 	list-style : none;
+ 	margin-left : 25px;
+ }
+
+ ul li{
+ 	float : left;
+ }
+
+ .menu, .user{
+ 	vertical-align : middle;
+ 	align-items : center;
+
+ }
+
+ .user{
+ 	text-align : right;
+ }
+
+ .left, .center, .right{
+ 	flex : 1;
+ }
+
+ .right{
+ 	text-align : right;
+ 	margin-right : auto;
+ 	min-width : fit-content;
+ }
+
+ .menuItem, .userItem{
+ 	margin-left : 10px;
+ 	cursor:pointer
+ }
+
+ .menuItem a{
+ 	margin-left : 20px;
+ 	font-size : 16px;
+ 	font-weight : 600;
+ 	color : #919191;
+ }
+
+ .menuItem a:hover{
+ 	color : #313131;
+ }
+
+
+ .userItem a{
+ 	font-weight : 600;
+ 	color : #919191;
+ 	margin : 0px 6px;
+ }
+
+ .userItem a:hover{
+ 	color : #313131;
+ }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+</style>
+
+<header>
+	<div class = "menu-backgroud-color"></div>
+	<div class="left">
+		<a href="/"> <img class="logo"
+			src="/static/images/logo.png" alt="logo" width="100">
+		</a>
+	</div>
+	<div class="center"></div>
+	<div class="right">
+		<div class="menu">
+			<ul class="menuList">
+                <li class='menuItem'><a href='/'>[HOME]</a></li>
+	            <li class='menuItem'><a href='/search/'>[SEARCH]</a></li>
+                <li class='menuItem'><a href='/share/'>[SHARE]</a></li>
+    		</ul>
+		</div>
+		<div class="user">
+			<ul class="userList">
+				<li class='userItem' align='center'>
+					{% if status == 'logout' %}
+						<div id="logout"><span class='material-symbols-outlined'>logout</span></div>
+						{% include '/login/logoutModal.html' %}
+					{% else %}
+						<a href="/login/"><span class='material-symbols-outlined'>login</span></a>
+					{% endif %}
+				</li>
+			</ul>
+	    </div>
+	</div>
+</header>
+<div class="hiddin-box"></div>

@@ -1,0 +1,21 @@
+.imgbox{
+    height:350px;
+    margin-bottom:5px;
+}
+
+.content-img{
+    width:250px;
+    max-height:350px
+}
+
+.book-title{
+    margin-bottom: 3px;
+    font-size: large;
+    font-weight: 500;
+    color: #313131;
+}
+
+.rating{
+    font-size: medium;
+    color: #919191;
+}  

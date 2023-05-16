@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="/static/css/defaultModal.css">
+<script>
+    $(document).ready(function(){
+        $("#logout").click(function(){
+            $("#logoutModal").css('display', 'block');
+        });
+
+        $("#logoutCancelBtn").click(function(){
+            $("#logoutModal").css('display', 'none');
+        });
+
+        $("#logoutBtn").click(function(){
+            location.href("/");
+        });
+    });
+    
+</script>
+
+<style>
+    #logoutModal-content {
+        width: 400px;
+        min-width: 400px;
+        max-width: 400px;
+    }
+    
+    .space > p{
+        text-align: center;
+        margin: 50px 0px;
+    }    
+</style>
+    
+    <!-- The Modal -->
+    <div id="logoutModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" id="logoutModal-content">
+            <div class="space">
+            <p>로그아웃 하시겠습니까?</p>
+            <div class="btn_row">
+                <button class="btn confirmBtn" id="logoutBtn">확인</button>
+                <button class="btn cancelBtn" id="logoutCancelBtn">취소</button>
+            </div>
+        </div>
+      
+    </div>

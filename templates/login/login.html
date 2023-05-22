@@ -13,7 +13,7 @@ function loginCheck(){
 		document.getElementById("password").focus();
 		return false;
 	}
-	document.loginForm.action = '/login/loginCheck';
+	document.loginForm.action = '/login/';
 	document.loginForm.submit();
 }
 </script>
@@ -136,10 +136,6 @@ input:focus{
 </head>
 <body>
 	{% include 'header.html' %}
-	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
-	if (session_id != null)	response.sendRedirect("/product/list");
-	==> server.py에서 처리
-	-->
 		<form method="post" id="loginForm" name="loginForm">
 		<div id="innerForm">
 		<h3>로그인</h3>

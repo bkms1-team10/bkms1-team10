@@ -20,6 +20,10 @@ def login():
     else:
         if request.method == 'POST':
             ##로그인 정보 일치하는 지 확인
+            ##1) 아이디 검색
+            ##2) 아이디+비밀번호 검색
+            ##1) 2) 결과 없으면 html 출력 시 parameter로 message 전달 ID_NOT_FOUND / PASSWORD_NOT_FOUND, header = 'login'
+            ##2) 결과 있으면 세션 설정(하단 코드)
             session['userID'] = request.form['userID']
             return redirect(url_for('home'))
         else:

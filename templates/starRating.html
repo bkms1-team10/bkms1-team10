@@ -1,0 +1,70 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    function changeComment(width){
+        if (width == 0)
+            $(".comment").text("평가하기");
+        else{
+            $(".comment").text("×");
+            $(".comment").css("color", "light-gray");
+            $(".comment").hover(function(){
+                $(this).css("cursor", "pointer");
+            });
+            $(".comment").click(function(){
+                $(".range").val(0);
+                document.querySelector(`.rating`).style.width = 0;
+                changeComment(0);
+            });
+        }
+    }
+
+    $(document).ready(function(){
+        width = $(".range").val() * 10;
+        document.querySelector(".rating").style.width = `${width}%` ;
+        changeComment(width);
+
+        $(".range").change(function(){
+            width = $(this).val() * 10
+            document.querySelector(`.rating`).style.width = `${width}%`;
+            changeComment(width);
+        });
+
+    });
+</script>
+
+<style>
+.comment{
+    text-align: center;
+}
+.star {
+    display:inline-block;
+    position: relative;
+    font-size: 2rem;
+    color: #ddd;
+  }
+  
+  .star input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .rating {
+    width: 0;
+    position: absolute; 
+    left: 0;
+    color: #ffc107;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+</style>
+
+<div class="comment">평가하기</div>
+<span class="star">
+    ★★★★★
+    <span class="rating">★★★★★</span>
+    <input type="range" class="range"  value="6" step="1" min="0" max="10">
+</span>

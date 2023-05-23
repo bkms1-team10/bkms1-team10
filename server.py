@@ -61,6 +61,14 @@ def search():
     else:
         return redirect(url_for('landing'))
     
+@app.route('/bookInfo/')
+def bookInfo():
+    if 'userID' in session:
+        header='logout'
+        return render_template("bookInfo.html", status=header)
+    else:
+        return redirect(url_for('landing'))
+    
 
 @app.route('/share/')
 def share():

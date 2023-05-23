@@ -49,14 +49,10 @@
 
 <head>
 <meta charset="UTF-8">
-<title>main page</title>
+<title>Book Review</title>
 </head>
 <body>
 	{% include 'header.html' %}
-	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
-	if (session_id != null)	response.sendRedirect("/product/list");
-	==> server.py에서 처리
-	-->
 	<div id="innerForm">
         <div class="content-row">
             <h2 class="content-title">평균 별점이 높은 책</h2>

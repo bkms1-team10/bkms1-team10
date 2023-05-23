@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="/static/css/defaultModal.css">
+<script>
+$(document).ready(function(){
+    $("#btn_writeReview").click(function(){
+        $("#reviewModal").css('display', 'block');
+    });
+
+    $("#reviewCancelBtn").click(function(){
+        $("#reviewModal").css('display', 'none');
+    });
+
+    $("#review_close").click(function(){
+        $("#reviewModal").css('display', 'none');
+    });
+
+    $(document).keydown(function(event) {
+        if ( event.keyCode == 27 || event.which == 27 ) {
+            $("#reviewModal").css('display', 'none');
+        }   
+    });
+});
+
+function resize(obj) {
+    obj.style.height = 'auto';
+    obj.style.height = (obj.scrollHeight) + 'px';
+}
+
+
+</script>
+<style>
+    #reviewModal-content{
+        width: 650px;
+        min-width: 650px;
+        max-width: 650px;
+    }
+
+    .modalTitle{
+        margin-left:9px;
+    }
+
+    #reviewForm{
+        margin-bottom: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        width : 600px;
+        border-bottom: 1.5px solid #BFBFBF;
+    }
+
+    .close{
+        width:30px;
+        vertical-align: middle;
+    }
+
+    .reviewArea{
+        min-height: 1rem;
+        font-size : 18px;
+        width: 560px;
+        margin-left: 20px;
+        line-height:24px;
+        box-sizing : border-box;
+        resize:none;
+        overflow-y: hidden;
+        border: transparent;
+        background: transparent;
+    }
+
+    .reviewArea:focus{
+        outline: none;    
+    }
+</style>
+
+<!-- The Modal -->
+<div id="reviewModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content" id="reviewModal-content">
+      <span id="review_close" class="close">&times;</span>
+        <div class="space">
+        <h3 class="modalTitle">리뷰 작성하기</h3>
+            <form id="reviewForm">
+                <textarea class="reviewArea" id="reviewArea" name="reviewArea" maxlength="300" oninput="resize(this)" rows="1"></textarea>
+            </form>
+        </div>
+        <div class="btn_row">
+            <button class="btn confirmBtn" id="reviewAddBtn">추가하기</button>
+            <button class="btn cancelBtn" id="reviewCancelBtn">취소</button>
+        </div>
+    </div>
+  
+</div>

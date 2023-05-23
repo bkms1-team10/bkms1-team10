@@ -13,6 +13,7 @@
     .content-row{
         display: flex;
         flex-direction: row;
+        margin-bottom:50px;
     }
 
     .content-img{
@@ -76,6 +77,18 @@
         display: inline-block;
         vertical-align: middle;
     }
+
+    .sectionLabel{
+        margin-top:30px;
+        margin-bottom:10px;
+    }
+
+    .keyword{
+        margin-right: 15px;
+        margin-top:5px;
+        display: inline-block;
+        font-weight:400;
+    }
 </style>        
 
 <head>
@@ -115,6 +128,24 @@
                     {% include '/bookInfo/bookShareModal.html' %}
                 </div>
             </div>
+        </div>
+        <div class="contentBelow">
+            <h2 class="sectionLabel">줄거리</h2>
+            1997년 영국에서 출간된 이래 『해리 포터』 시리즈는 지금까지 200개국 이상 80개의 언어로 번역되고 출간되어 5억 부 이상을 판매했다. 국내에서도 1999년 『해리 포터와 마법사의 돌』의 출간을 필두로 지금까지 약 1,500만 부가 판매되었으며, 현재에도 독자들에게 변함없는 사랑을 받고 있다. 이 시리즈는 여덟 편의 영화로도 제작되어 전 세계 곳곳에서 흥행을 거두었고, 영화와 관련된 새로운 도서가 출간되고 테마 파크가 조성되는 등 놀라운 기현상을 빚어냈다.
+            <br>
+뿐만 아니라 『해리 포터』 시리즈에서 또 다른 작품들이 문화상품으로 파생되어 지금도 꾸준히 독자들을 만나고 있다. ‘해리 포터’의 다음 세대인 자녀들의 이야기를 다룬 『해리 포터와 저주 받은 아이』는 시나리오로 출간된 이후 연극으로 만들어져 영국을 시작으로 미국, 호주, 독일, 캐나다 등 세계 곳곳에서 열띤 호응을 얻으며 공연 중이고, 『해리 포터』의 세계관이 확장된 『신비한 동물 사전』 시리즈는 계속해서 영화로 제작되고 있다. 이제 『해리 포터』는 소설이라는 단순한 문학 장르에 머무르지 않고 ‘21세기를 대표하는 시대의 아이콘’으로 불리며 일종의 사회문화 현상으로 받아들여지고 있다.
+</div>
+        <div class="contentBelow">
+            <h2 class="sectionLabel">키워드</h2>
+            <h3 class="keyword">#판타지</h3>
+            <h3 class="keyword">#소설</h3>
+            <h3 class="keyword">#베스트셀러</h3>
+            <h3 class="keyword">#실사화</h3>
+            <h3 class="keyword">#해리</h3>
+        </div>
+        <div class="contentBelow">
+            <h2 class="sectionLabel">리뷰</h2>
+            {% include '/bookInfo/reviewTable.html' %}
         </div>
 	</div>
 

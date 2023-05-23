@@ -78,4 +78,8 @@ def share():
     else:
         return redirect(url_for('landing'))    
 
+@app.route('/map/')
+def map():
+    return render_template("/bookInfo/map.html")
+
 app.run(debug=True)

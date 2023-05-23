@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="/static/css/defaultModal.css">
+<link rel="stylesheet" href="/static/css/profileCell.css">
+<style>
+    #findShareModal-content{
+        width: 700px;
+        min-width: 700px;
+        max-width: 700px;
+        padding-left:50px;
+        padding-right:50px;
+    }
+
+    .modalTitle{
+        margin-left:9px;
+    }
+
+    .close{
+        width:30px;
+        vertical-align: middle;
+    }
+</style>
+
+<!-- The Modal -->
+<div id="findShareModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content" id="findShareModal-content">
+      <span id="findShare_close" class="close">&times;</span>
+        <div class="space">
+            <h3 class="modalTitle">북 쉐어 찾기</h3>
+            <div id="map" style="width:100%; height:350px;"></div>
+        </div>
+        {% include '/bookInfo/findShareTable.html' %}
+    </div>
+  
+</div>
+
+<script src="/static/js/map.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#btn_findshare").click(function(){
+            $("#findShareModal").css('display', 'block');
+            map();
+        });
+    
+        $("#findShare_close").click(function(){
+            $("#findShareModal").css('display', 'none');
+        });
+    
+        $(document).keydown(function(event) {
+            if ( event.keyCode == 27 || event.which == 27 ) {
+                $("#findShareModal").css('display', 'none');
+            }   
+        });
+    });
+</script>
+    

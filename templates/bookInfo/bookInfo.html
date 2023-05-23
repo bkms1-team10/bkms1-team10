@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+{% include '/bookInfo/mapAPI.html'%}
 <style>
     #innerForm{
         margin : auto;
@@ -98,7 +98,7 @@
                     <hr />
                 </div>
                 <div class="description-row">
-                    <h3 class="info" id="rateInfo">평균 별점 ㆍ 예상 별점</h3>
+                    <h3 class="info" id="rateInfo">평균 ✨3.5 ㆍ 예상 ✨3.5</h3>
                     <hr />
                 </div>
                 <div class="description-row">
@@ -112,8 +112,8 @@
                     <div class="button" id="btn_findshare"><span class="material-symbols-outlined icon">face</span>
                         <div class="btn-value">북 쉐어 찾기</div>
                     </div>
+                    {% include '/bookInfo/bookShareModal.html' %}
                 </div>
-                
             </div>
         </div>
 	</div>

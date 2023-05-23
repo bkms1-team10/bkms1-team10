@@ -65,7 +65,7 @@ def search():
 def bookInfo():
     if 'userID' in session:
         header='logout'
-        return render_template("bookInfo.html", status=header)
+        return render_template("/bookInfo/bookInfo.html", status=header)
     else:
         return redirect(url_for('landing'))
     

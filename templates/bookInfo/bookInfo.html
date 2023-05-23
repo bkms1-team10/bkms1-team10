@@ -31,6 +31,10 @@
         font-weight: 400;
         color: #919191;
     }
+
+    #rateInfo{
+        color: #313131;
+    }
     
     hr{
         background:#919191;
@@ -94,18 +98,22 @@
                     <hr />
                 </div>
                 <div class="description-row">
-                    <h3 class="info">평균 별점 ㆍ 예상 별점</h3>
+                    <h3 class="info" id="rateInfo">평균 별점 ㆍ 예상 별점</h3>
                     <hr />
                 </div>
                 <div class="description-row">
                     <div class="ratingBox">
-                    {% include 'starRating.html' %}
+                    {% include '/bookInfo/starRating.html' %}
                     </div>
                     <div class="button" id="btn_writeReview"><span class="material-symbols-outlined icon">stylus</span>
-                        <div class="btn-value">리뷰 작성</div></div>
+                        <div class="btn-value">리뷰 작성</div>
+                    </div>
+                    {% include '/bookInfo/reviewModal.html' %}
                     <div class="button" id="btn_findshare"><span class="material-symbols-outlined icon">face</span>
-                        <div class="btn-value">북 쉐어 찾기</div></div>
+                        <div class="btn-value">북 쉐어 찾기</div>
+                    </div>
                 </div>
+                
             </div>
         </div>
 	</div>

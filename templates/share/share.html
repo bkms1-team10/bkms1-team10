@@ -36,14 +36,10 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Book Share</title>
+<title>Book Review</title>
 </head>
 <body>
 	{% include 'header.html' %}
-	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
-	if (session_id != null)	response.sendRedirect("/product/list");
-	==> server.py에서 처리
-	-->
 	<div id="innerForm">
         <div class='row'>
             <div class="titleBox">
@@ -54,6 +50,7 @@
             {% include '/share/searchModal.html' %}
         </div>
         {% include '/share/shareList.html' %}
+        {% include '/share/addBookModal.html' %}
 	</div>
 
 </body>

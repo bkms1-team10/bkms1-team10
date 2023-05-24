@@ -142,16 +142,16 @@ input:focus{
 		<div class="row">
 			<label class= "title">아이디</label>
 			<input type="text" class="field" id="userID" name="userID" autofocus>
-			<c:if test="${message == 'ID_NOT_FOUND' }">
+			{% if message == 'ID_NOT_FOUND' %}
 			<div id="msg_id" class="msg"> 존재하지 않는 아이디입니다.</div>
-			</c:if>
+			{% endif %}
 		</div>
 		<div class="row">
 			<label class= "title">비밀번호</label>
 			<input type="password" class="field" id="password" name="password">
-			<c:if test="${message == 'PASSWORD_NOT_FOUND' }">
+			{% if message == 'PASSWORD_NOT_FOUND' %}
 			<div id="msg_password" class="msg">잘못된 패스워드 입니다.</div>
-			</c:if>
+			{% endif %}
 		</div>
 		<div class="rowFind">	
 		</div>

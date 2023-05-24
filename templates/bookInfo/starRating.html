@@ -4,7 +4,9 @@
         if (width == 0)
             $(".comment").text("평가하기");
         else{
-            $(".comment").text("×");
+            var rate = ($(".range").val() * 0.5).toFixed(1);
+            //$(".comment").text(×);
+            $(".comment").text(`${rate}`);
             $(".comment").css("color", "light-gray");
             $(".comment").hover(function(){
                 $(this).css("cursor", "pointer");
@@ -36,7 +38,7 @@
     text-align: center;
 }
 .star {
-    display:inline-block;
+    display:block;
     position: relative;
     font-size: 2rem;
     color: #ddd;

@@ -6,10 +6,10 @@
 	$(document).ready(function(){		
 		$("#userID").change(function(){
 			$.ajax({
-				url : "/login/idCheck",
+				url : "{{url_for('idCheck')}}",
 				type : "post",
 				dataType : "json",
-				data : {"userID" : $("#userID").val()},
+				data : { userID : $("#userID").val()},
 				success : function(data){
 						if(data == 1){
 						$("#msg_id").text("동일한 아이디가 이미 존재합니다. 새로운 아이디를 입력하세요.");
@@ -280,7 +280,7 @@ input:focus{
 </style>
 <head>
 <meta charset="UTF-8">
-<title>JSP미니 프로젝트</title>
+<title>Book Review</title>
 </head>
 <body>
 	{% include './header.html' %}

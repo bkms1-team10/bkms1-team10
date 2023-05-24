@@ -1,0 +1,18 @@
+.profileIcon{
+    font-size:2em;
+}
+
+.profile{
+    display:inline-block;
+    margin-left: 10px;
+}
+
+.name{
+    font-size:18px;
+    font-weight:500;
+}
+
+.mail{
+    font-size:15px;        
+    font-weight:300;
+}

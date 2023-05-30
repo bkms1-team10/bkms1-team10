@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="/static/css/defaultModal.css">
+<script>
+    $(document).ready(function(){
+        $(".tableRow").click(function(){
+            $("#addBookModal").css('display', 'block');
+        });
+
+        $("#addBookCancelBtn").click(function(){
+            $("#addBookModal").css('display', 'none');
+        });
+
+        $("#addBookBtn").click(function(){
+            $(location).attr("href", "/");
+        });
+    });
+    
+</script>
+
+<style>
+    #addBookModal{
+        padding-top: 200px;
+    }
+
+    #addBookModal-content {
+        width: 400px;
+        min-width: 400px;
+        max-width: 400px;
+    }
+    
+    .space > p{
+        text-align: center;
+        margin: 50px 0px;
+    }    
+</style>    
+    <!-- The Modal -->
+    <div id="addBookModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" id="addBookModal-content">
+            <div class="space">
+            <p>쉐어링 목록에 추가하시겠습니까?</p>
+            <div class="btn_row">
+                <button class="btn confirmBtn" id="addBookBtn">추가</button>
+                <button class="btn cancelBtn" id="addBookCancelBtn">취소</button>
+            </div>
+        </div>
+      
+    </div>

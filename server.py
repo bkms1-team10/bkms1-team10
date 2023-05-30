@@ -7,7 +7,6 @@ app.secret_key = os.urandom(24)
 
 @app.route('/index/')
 def landing():
-    ## 세션 정보 있으면 home로 이동, 없으면 landing page 출력
     if 'userID' in session:
         return redirect(url_for('home'))
     else:
@@ -53,7 +52,6 @@ def logout():
 
 @app.route('/join/')
 def join():
-    ## 세션 정보 있으면 home로 이동
     if 'userID' in session:
         return redirect(url_for('home'))
     else:
@@ -90,7 +88,10 @@ def bookInfo():
         book.description="대충 해리포터 줄거리임~~"
         book.average_rating="7"
 
-        return render_template("/bookInfo/bookInfo.html", status=header, book=book)
+
+        ##find sharing
+        user_id = '001'
+        return render_template("/bookInfo/bookInfo.html", status=header, book=book, user_id=user_id)
     else:
         return redirect(url_for('landing'))
     

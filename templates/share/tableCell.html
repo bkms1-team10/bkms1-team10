@@ -1,6 +1,6 @@
 {% for book in searchList %}
 <tr class="tableRow" onClick="location.href='/addShareBook/{{book.id}}'">
-    <input type="hidden" value="{{book.id}}">
+    <input  value="{{book.id}}">
     <td class="bookTitle">{{book.title}}</td>
     <td class="bookAuthor">{{book.author}}</td>
 </tr>

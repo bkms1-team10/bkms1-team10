@@ -23,6 +23,7 @@ $(document).ready(function(){
             data: { searchWord : $("#searchWord").val()},
             success: function (result) {
                 $('.searchTable').css('display','inline-table');
+                $(".bookList").html('<th id="head-title">제목</th><th id="head-author">저자</th>');
                 $(".bookList").append(result.toString());
             }
         });

@@ -247,19 +247,19 @@ def searchShareBook():
     searchList.append(book1)
 
     book2 = {}
-    book2["book_id"] = "002"
+    book2["id"] = "002"
     book2["title"]="해리포터와 비밀의 방"
     book2["author"]="J.K 롤링"
     searchList.append(book2)
 
     book3 = {}
-    book3["book_id"] = "003"
+    book3["id"] = "003"
     book3["title"]="해리포터와 아즈카반의 죄수"
     book3["author"]="J.K 롤링"
     searchList.append(book3)
 
     book4 = {}
-    book4["book_id"] = "004"
+    book4["id"] = "004"
     book4["title"]="해리포터와 불의 잔"
     book4["author"]="J.K 롤링"
     searchList.append(book4)    

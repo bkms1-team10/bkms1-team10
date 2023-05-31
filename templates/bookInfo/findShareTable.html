@@ -15,5 +15,17 @@
 </style>
 
 <table class="searchTable">
-    {% include '/bookInfo/profileCell.html' %} 
+    {% for i in  range(bookShareList | length) %}
+    <tr class="tableRow" name='{{loop.index}}'> 
+        <td class="profileRow">
+            <span class="material-symbols-outlined profileIcon">account_circle</span>
+            <div class="profile">
+                <div class="name">{{bookShareList[i].nickname}}</div>
+                <div class="mail">{{bookShareList[i].email}}</div>
+                <input type="hidden" id="lat_{{loop.index}}" value='{{bookShareList[i].lat}}'>
+                <input type="hidden" id="long_{{loop.index}}" value='{{bookShareList[i].long}}'>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
 </table>

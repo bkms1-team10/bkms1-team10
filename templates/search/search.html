@@ -2,6 +2,17 @@
 <html>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+<script>
+	$(document).ready(function(){					
+		$("#btn_register").click(function(){
+            document.searchForm.action = '/search/';
+	        document.searchForm.submit();
+		});
+	});
+	
+</script>
+
+<link rel="stylesheet" href="/static/css/defaultBook.css">
 <style>
     #innerForm{
         margin : auto;
@@ -54,12 +65,13 @@
 	{% include 'header.html' %}
 	<div id="innerForm">
         <h2>도서 검색하기</h2>
-        <form id="searchForm">
+        <form id="searchForm" action="/search/" method="POST">
             <span class='material-symbols-outlined'>Search</span>
-            <input type="text" class="field" id="search" name="search">
+            <input type="text" class="field" id="searchWord" name="searchWord">
         </form>
-
+        {% if searched %}
         {% include '/search/searchResult.html' %}
+        {% endif %}
 	</div>
 
 </body>

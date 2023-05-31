@@ -1,10 +1,15 @@
 <style>
     .searchTable{
         margin-bottom: 30px;
-        margin-left:auto;
+        margin-left:25px;
         margin-right:auto;
         width:700px;
         border-collapse: collapse;
+    }
+
+    tbody{
+        margin-left:auto;
+        margin-right:auto;
     }
 
     #head-title{
@@ -20,10 +25,8 @@
 
 </style>
 
-<table class="searchTable">
-    <th id="head-title">제목</th>
-    <th id="head-author">저자</th>
-    {% include '/share/bookCell.html' %}
-    {% include '/share/bookCell.html' %}
-    {% include '/share/bookCell.html' %}
+<table class="searchTable" hidden>
+    <tbody class="bookList">
+        <th id="head-title">제목</th><th id="head-author">저자</th>
+    </tbody>
 </table>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/static/css/defaultBook.css">
 
 <style>
     #innerForm{
@@ -54,83 +55,17 @@
 <body>
 	{% include 'header.html' %}
 	<div id="innerForm">
+        {% for key, value in seriesList.items()%}        
         <div class="content-row">
-            <h2 class="content-title">평균 별점이 높은 책</h2>
+            <h2 class="content-title">{{key}}</h2>
             <ul class="content-list">
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
+                {% for book in value %}
+                    {% with book = book%}
+                        {% include 'book.html' %}
+                    {% endwith %}
+                {% endfor %}
             </ul>
         </div>
-        <div class="content-row">
-            <h2 class="content-title">평균 별점이 높은 책</h2>
-            <ul class="content-list">
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-            </ul>
-        </div>
-
-        <div class="content-row">
-            <h2 class="content-title">평균 별점이 높은 책</h2>
-            <ul class="content-list">
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-            </ul>
-        </div>
-        <div class="content-row">
-            <h2 class="content-title">평균 별점이 높은 책</h2>
-            <ul class="content-list">
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-            </ul>
-        </div>
-        <div class="content-row">
-            <h2 class="content-title">평균 별점이 높은 책</h2>
-            <ul class="content-list">
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-                {% include 'book.html' %}
-            </ul>
-        </div>
-
+        {% endfor %}
 	</div>
-
 </body>

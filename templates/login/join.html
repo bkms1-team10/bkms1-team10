@@ -2,6 +2,7 @@
 <html>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% include '/bookInfo/mapAPI.html'%}
 <script>
 	$(document).ready(function(){		
 		$("#userID").change(function(){
@@ -101,12 +102,10 @@
 		      }
 		 	else{
 		 		$("#msg_email").css('display', 'none');
-		 		$("#email").attr("disabled", true);
-		 		$("#btn_email").attr("disabled", true);
 		 		}
 
 			//주소
-			if($("#detailAddress").val() == ''){ $("#msg_address").css('display', 'block'); $("#detailAddress").focus(); return false; }
+			if($("#address").val() == ''){ $("#msg_address").css('display', 'block'); $("#detailAddress").focus(); return false; }
 			else{	$("#msg_address").css('display', 'none');}
 
 		 	$("#postcode").attr("disabled", false);
@@ -114,7 +113,7 @@
 		 	$("#extraAddress").attr("disabled", false);
 		 	$("#email").attr("disabled", false);
 
-			$("#registerForm").attr("action","/login/join").submit();
+			$("#registerForm").attr("action","/join/").submit();
 
 		});
 	});
@@ -139,33 +138,25 @@
                     addr = data.jibunAddress;
                 }
 
-                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-                if(data.userSelectedType === 'R'){
-                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                        extraAddr += data.bname;
-                    }
-                    // 건물명이 있고, 공동주택일 경우 추가한다.
-                    if(data.buildingName !== '' && data.apartment === 'Y'){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                    if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
-                    }
-                    // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("extraAddress").value = extraAddr;
+				// 주소-좌표 변환 객체를 생성합니다
+				var geocoder = new kakao.maps.services.Geocoder();
+				
+				// 주소로 좌표를 검색합니다
+				geocoder.addressSearch(addr, function(result, status) {
+					console.log(addr);
 
-                } else {
-                    document.getElementById("extraAddress").value = '';
-                }
+					// 정상적으로 검색이 완료됐으면 
+					if (status === kakao.maps.services.Status.OK) {
+							lat = result[0].y;
+							long = result[0].x;
+							document.getElementById('lat').value = lat;
+			                document.getElementById("long").value = long;
+						} 
+				});    
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('postcode').value = data.zonecode;
                 document.getElementById("address").value = addr;
-                // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("detailAddress").focus();
             }
         }).open();
     }
@@ -278,6 +269,7 @@ input:focus{
 
 
 </style>
+
 <head>
 <meta charset="UTF-8">
 <title>Book Review</title>
@@ -323,8 +315,8 @@ input:focus{
 		<input type="text" class="field" id="postcode" name="postcode" placeholder="우편번호" disabled>
 		<input type="button" id="btn_address" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
 		<input type="text" class="field" id="address" name="address" placeholder="기본주소" disabled><br>
-		<input type="text" class="field" id="detailAddress" name="detailAddress" placeholder="상세주소" autoComplete="off">
-		<input type="hidden" class="field" id="extraAddress" name="extraAddress" placeholder="참고항목" disabled>
+		<input type="hidden" class="field" id="lat" name="lat">
+		<input type="hidden" class="field" id="long" name="long">
 		<div id="msg_address" class="msg">주소지를 입력해주세요.</div>
 	</div>
 	<br>

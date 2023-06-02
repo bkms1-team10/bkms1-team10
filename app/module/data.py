@@ -58,16 +58,12 @@ class Book:
 
 
 class User:
-    def __init__(self, user_id=None, id=None, pw=None, nickname=None, email=None, address=None, address_gu=None, address_dong=None, lat_long=None, lat=None, long=None):
+    def __init__(self, user_id=None, id=None, pw=None, nickname=None, email=None, lat=None, long=None):
         self.__user_id = user_id
         self.__id = id
         self.__pw = pw
         self.__nickname = nickname
         self.__email = email
-        self.__address = address
-        self.__address_gu = address_gu
-        self.__address_dong = address_dong
-        self.__lat_long = lat_long
         self.__lat = lat
         self.__long = long 
     
@@ -110,38 +106,6 @@ class User:
     @email.setter
     def email(self, value):
         self.__email = value
-
-    @property
-    def address(self):
-        return self.__address
-    
-    @address.setter
-    def address(self, value):
-        self.__address = value
-    
-    @property
-    def address_gu(self):
-        return self.__address_gu
-    
-    @address_gu.setter
-    def address_gu(self, value):
-        self.__address_gu = value
-
-    @property
-    def address_dong(self):
-        return self.__address_dong
-    
-    @address_dong.setter
-    def address_dong(self, value):
-        self.__address_dong = value
-    
-    @property
-    def lat_long(self):
-        return self.__lat_long
-    
-    @lat_long.setter
-    def lat_long(self, value):
-        self.__lat_long = value
     
     @property
     def lat(self):

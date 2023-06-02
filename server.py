@@ -50,13 +50,25 @@ def logout():
     session.pop('userID', None)
     return redirect(url_for('landing'))
 
-@app.route('/join/')
+@app.route('/join/', methods=['GET', 'POST'])
 def join():
     if 'userID' in session:
         return redirect(url_for('home'))
     else:
-        header='login'
-        return render_template("/login/join.html", status=header)    
+        if request.method == 'GET' :
+            header='login'
+            return render_template("/login/join.html", status=header)
+        elif request.method == 'POST':
+            ##회원가입 form에서 데이터 받아서 db에 저장
+            ##id 중복 검사 및 비밀번호, 이메일 유효성 검사는 이전에 완료했으므로 insert만 하면 됨
+            userID = request.form['userID']
+            password = request.form['password']
+            username = request.form['username']
+            email = request.form['email']
+            lat = request.form['lat']
+            long = request.form['long']
+            print(userID, password, username, email, lat, long)
+            return redirect(url_for('login'))
 
 @app.route('/')
 def home():
@@ -179,7 +191,10 @@ def bookInfo():
         book.title="해리포터와 비밀의 방"
         book.author="J.K. 롤링"
         book.description="대충 해리포터 줄거리임~~"
-        book.average_rating="7"
+        book.average_rating="3"
+
+        ## 유저 위치 정보(북 쉐어 찾을 때 지도 중심 설정)
+        userLoc = ["37.553091", "126.845341"]
 
         ## 북 쉐어 리스트
         bookShareList = []
@@ -197,7 +212,7 @@ def bookInfo():
         user2.long="126.842"
         bookShareList.append(user2)
         
-        return render_template("/bookInfo/bookInfo.html", status=header, book=book, bookShareList=bookShareList)
+        return render_template("/bookInfo/bookInfo.html", status=header, book=book, userLoc = userLoc, bookShareList=bookShareList)
     else:
         return redirect(url_for('landing'))
     

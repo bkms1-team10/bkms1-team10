@@ -27,7 +27,7 @@
         <div class="space">
             <h3 class="modalTitle">북 쉐어 찾기</h3>
             <div id="map" style="width:100%; height:350px;"></div>
-            <input id="myLat" type="hidden" value="37.553091"> <input id="myLong" type="hidden" value="126.845341">
+            <input id="myLat" type="hidden"  value={{userLoc[0]}}> <input id="myLong" type="hidden"  value={{userLoc[1]}}>
         </div>
         {% include '/bookInfo/findShareTable.html' %}
     </div>

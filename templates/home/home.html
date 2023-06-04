@@ -1,71 +1,106 @@
 <!DOCTYPE html>
 <html>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/static/css/defaultBook.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-<style>
-    #innerForm{
-        margin : auto;
-        width : 1080px;
-        min-width: 1080px;
-    }
-    h3{
-        text-align :left;
-        margin : 30px 5px;
-    }
+    <style>
+        #innerForm {
+            margin: auto;
+            width: 1080px;
+            min-width: 1080px;
+        }
+        h3 {
+            text-align: left;
+            margin: 30px 5px;
+        }
 
-    .content-list{
-        margin-left: 0px;
-        padding-left: 0px;
-        padding-bottom: 20px;
-        display: grid;
-        grid-column-gap: 25px;
-        grid-auto-flow: column;
-        list-style: none;
-        overflow-x: scroll;
-        scroll-snap-type: x mandatory;
+        .content-list {
+            margin-left: 0px;
+            padding-left: 0px;
+            padding-bottom: 20px;
+            display: grid;
+            grid-column-gap: 25px;
+            grid-auto-flow: column;
+            list-style: none;
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+        }
 
-    }
-    
-    .content-list::-webkit-scrollbar {
-        background-color:transparent;
-        height: 12px;
-    }
+        .content-list::-webkit-scrollbar {
+            background-color: transparent;
+            height: 12px;
+        }
 
-    .content-list:hover::-webkit-scrollbar-thumb,
-    .content-list::-webkit-scrollbar-track {
-        border-radius: 92px;
-    }
+        .content-list:hover::-webkit-scrollbar-thumb,
+        .content-list::-webkit-scrollbar-track {
+            border-radius: 92px;
+        }
 
-    .content-list:hover::-webkit-scrollbar-thumb{
-        height: 12px;
-        background: #fd994070;
-    }
+        .content-list:hover::-webkit-scrollbar-thumb {
+            height: 12px;
+            background: #fd994070;
+        }
 
-    .content-list:hover::-webkit-scrollbar-track {
-        background: white;
-    }
+        .content-list:hover::-webkit-scrollbar-track {
+            background: white;
+        }
+    </style>
 
-</style>        
-
-<head>
-<meta charset="UTF-8">
-<title>Book Review</title>
-</head>
-<body>
-	{% include 'header.html' %}
-	<div id="innerForm">
-        {% for key, value in seriesList.items()%}        
-        <div class="content-row">
-            <h2 class="content-title">{{key}}</h2>
-            <ul class="content-list">
-                {% for book in value %}
-                    {% with book = book%}
-                        {% include 'book.html' %}
-                    {% endwith %}
-                {% endfor %}
-            </ul>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Book Review</title>
+    </head>
+    <body>
+        {% include 'header.html' %}
+        <div id="innerForm">
+            <div class="content-row">
+                <h2 class="content-title">평균 별점이 높은 책 100개</h2>
+                <ul class="content-list" id="book_list"></ul>
+            </div>
         </div>
-        {% endfor %}
-	</div>
-</body>
+    </body>
+</html>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/get_books",
+            type: "GET",
+            success: function (result) {
+                html = "";
+                for (let data of result["books_data"]) {
+                    html += ' <li class="content-item">';
+                    html +=
+                        '     <div class="content" onClick=" location.href= ' +
+                        "'" +
+                        " bookInfo/" +
+                        data.book_id +
+                        "'" +
+                        '">';
+                    html += '          <div class="imgbox">';
+                    html +=
+                        '          <img class="content-img" src="' +
+                        data.image_url +
+                        '">';
+                    html += "      </div>";
+                    html += '      <div class="content-description">';
+                    html +=
+                        '         <div class="book-title">' +
+                        data.title +
+                        "</div>";
+                    html +=
+                        '         <div class="rating"> <span>평균</span> ✨<span>' +
+                        data.average_rating +
+                        "</span> ";
+                    html += "   </div>";
+                    html += "     </div>";
+                    html += "      </div>";
+                    html += "       </li>";
+                }
+
+                $("#book_list").append(html);
+            },
+            error: function (result) {
+                alert("데이토 조회 실패.");
+            },
+        });
+    });
+</script>

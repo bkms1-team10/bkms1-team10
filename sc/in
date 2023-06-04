@@ -1,0 +1,9 @@
+deactivate
+export SETTINGS=$(pwd)/settings.py
+export FLASK_DEBUG=1
+export FLASK_ENV=development
+export FLASK_APP=server.py
+
+deactivate
+. venv/bin/activate
+

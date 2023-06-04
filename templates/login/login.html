@@ -1,168 +1,217 @@
 <!DOCTYPE html>
 <html>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-function loginCheck(){
-	if(document.getElementById("userID").value == ''){
-		alert("아이디를 입력하세요");
-		document.getElementById("userID").focus();
-		return false;
-	}
-	if(document.getElementById("password").value == ''){
-		alert("패스워드를 입력하세요");
-		document.getElementById("password").focus();
-		return false;
-	}
-	document.loginForm.action = '/login/';
-	document.loginForm.submit();
-}
-</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function loginCheck() {
+            if (document.getElementById("userID").value == "") {
+                alert("아이디를 입력하세요");
+                document.getElementById("userID").focus();
+                return false;
+            }
+            if (document.getElementById("password").value == "") {
+                alert("패스워드를 입력하세요");
+                document.getElementById("password").focus();
+                return false;
+            }
 
-<style>
-#loginForm{
-	margin : auto;
-	min-width : 700px;
-}
+            var data = new FormData();
+            data.append("id", $("#userID").val());
+            data.append("pw", $("#password").val());
 
-#innerForm{
-	margin : auto;
-	width : 400px;
-}
-h3{
-	text-align :left;
-	margin : 30px 5px;
-}
+            $.ajax({
+                url: "/login",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                data: data,
+                success: function (result) {
+                    location.href = "/";
+                },
+                error: function (result) {
+                    if (result.responseText == "ID_NOT_FOUND") {
+                        alert("로그인 ID 없음.");
+                    } else if (result.responseText == "PASSWORD_NOT_FOUND") {
+                        alert("로그인 PW 불일치.");
+                    } else if (result.responseText == "success") {
+                        location.href = "/";
+                    } else alert("기타 에러");
+                },
+            });
+        }
+    </script>
 
-.field{
-	font-size : 14px;
-	line-height:23px;
-	width : 100%;
-	border : 1px solid #BFBFBF;
-	padding : 10px 15px;
-	box-sizing : border-box;
-}
+    <style>
+        #loginForm {
+            margin: auto;
+            min-width: 700px;
+        }
 
-input:focus{
-    outline: none;
-}
+        #innerForm {
+            margin: auto;
+            width: 400px;
+        }
+        h3 {
+            text-align: left;
+            margin: 30px 5px;
+        }
 
-.row{
-	margin : 0px 5px;
-	font-size : 14px;
-	line-height : 17px;
-	margin-bottom : 20px;
-}
+        .field {
+            font-size: 14px;
+            line-height: 23px;
+            width: 100%;
+            border: 1px solid #bfbfbf;
+            padding: 10px 15px;
+            box-sizing: border-box;
+        }
 
-.rowFind{
-	margin : 20px 0px 30px;
-	text-align : right;
-}
+        input:focus {
+            outline: none;
+        }
 
-.title{
-	display : block;
-	margin-bottom : 12px;
-	line-height : 17px;
-	letter-spacing : -0.1em;
-}
+        .row {
+            margin: 0px 5px;
+            font-size: 14px;
+            line-height: 17px;
+            margin-bottom: 20px;
+        }
 
-.btn_row{
-	text-align : center;
-	margin-bottom : 15px;
-}
+        .rowFind {
+            margin: 20px 0px 30px;
+            text-align: right;
+        }
 
-.button{
-	padding: 5px;
-	margin : auto;
-	cursor : pointer;
-	border-radius : 50px;
-	width : 100%;
-	max-width : 240px;
-	min-width : 160px;
-	height : 54px ! important;
-	min-height : 54px;
-	font-size : 14px !important;
-	font-weight : 700;
-}
+        .title {
+            display: block;
+            margin-bottom: 12px;
+            line-height: 17px;
+            letter-spacing: -0.1em;
+        }
 
-.btn_box{
-	margin-top : 40px;
-}
+        .btn_row {
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-#btn_login{
-	color: #FFFFFF !important;
-    background-color: #313131 !important;
-    border-color: #313131 !important;
-    border-width : 1px;
-    transition-duration: 0.4s;
-}
+        .button {
+            padding: 5px;
+            margin: auto;
+            cursor: pointer;
+            border-radius: 50px;
+            width: 100%;
+            max-width: 240px;
+            min-width: 160px;
+            height: 54px !important;
+            min-height: 54px;
+            font-size: 14px !important;
+            font-weight: 700;
+        }
 
-#btn_join{
-	color: #313131 !important;
-    background-color: #FFFFFF !important;
-    border-color: #313131 !important;
-    border-width : 1px;
-    transition-duration: 0.4s;
-}
+        .btn_box {
+            margin-top: 40px;
+        }
 
-#btn_login:hover{
- 	opacity : 0.7;
-}
+        #btn_login {
+            color: #ffffff !important;
+            background-color: #313131 !important;
+            border-color: #313131 !important;
+            border-width: 1px;
+            transition-duration: 0.4s;
+        }
 
-#btn_join:hover{
- 	color: #FFFFFF !important;
- 	background-color: #313131 !important;
-}
+        #btn_join {
+            color: #313131 !important;
+            background-color: #ffffff !important;
+            border-color: #313131 !important;
+            border-width: 1px;
+            transition-duration: 0.4s;
+        }
 
-.findPW{
-	display : inline;
-    font-size: 13px;
-    line-height: 17px;
-    margin: 20px 6px 30px;
-    color: #666666;
-    cursor:pointer;
-}
+        #btn_login:hover {
+            opacity: 0.7;
+        }
 
-.msg{
-	font-size:12px;
-	color : red;
-}
-	
+        #btn_join:hover {
+            color: #ffffff !important;
+            background-color: #313131 !important;
+        }
 
-</style>
+        .findPW {
+            display: inline;
+            font-size: 13px;
+            line-height: 17px;
+            margin: 20px 6px 30px;
+            color: #666666;
+            cursor: pointer;
+        }
 
-<head>
-<meta charset="UTF-8">
-<title>로그인</title>
-</head>
-<body>
-	{% include 'header.html' %}
-		<form method="post" id="loginForm" name="loginForm">
-		<div id="innerForm">
-		<h3>로그인</h3>
-		<div class="row">
-			<label class= "title">아이디</label>
-			<input type="text" class="field" id="userID" name="userID" autofocus>
-			{% if message == 'ID_NOT_FOUND' %}
-			<div id="msg_id" class="msg"> 존재하지 않는 아이디입니다.</div>
-			{% endif %}
-		</div>
-		<div class="row">
-			<label class= "title">비밀번호</label>
-			<input type="password" class="field" id="password" name="password">
-			{% if message == 'PASSWORD_NOT_FOUND' %}
-			<div id="msg_password" class="msg">잘못된 패스워드 입니다.</div>
-			{% endif %}
-		</div>
-		<div class="rowFind">	
-		</div>
-		</div>
-		</form>
-		<div class="btn_box">
-		<div class="btn_row">
-			<input type="button" class="button" id="btn_login" NAME="Submit" VALUE="로그인하기" onclick="loginCheck()">
-		</div>
-		<div class="btn_row">
-			<input type="button" class="button" id="btn_join" VALUE="회원 가입하기" onClick="location.href='/join'">
-		</div>
-		</div>
-</body>
+        .msg {
+            font-size: 12px;
+            color: red;
+        }
+    </style>
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>로그인</title>
+    </head>
+    <body>
+        {% include 'header.html' %}
+        <form method="post" id="loginForm" name="loginForm">
+            <div id="innerForm">
+                <h3>로그인</h3>
+                <div class="row">
+                    <label class="title">아이디</label>
+                    <input
+                        type="text"
+                        class="field"
+                        id="userID"
+                        name="userID"
+                        autofocus
+                    />
+                    {% if message == 'ID_NOT_FOUND' %}
+                    <div id="msg_id" class="msg">
+                        존재하지 않는 아이디입니다.
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <label class="title">비밀번호</label>
+                    <input
+                        type="password"
+                        class="field"
+                        id="password"
+                        name="password"
+                    />
+                    {% if message == 'PASSWORD_NOT_FOUND' %}
+                    <div id="msg_password" class="msg">
+                        잘못된 패스워드 입니다.
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="rowFind"></div>
+            </div>
+        </form>
+        <div class="btn_box">
+            <div class="btn_row">
+                <input
+                    type="button"
+                    class="button"
+                    id="btn_login"
+                    name="Submit"
+                    value="로그인하기"
+                    onclick="loginCheck()"
+                />
+            </div>
+            <div class="btn_row">
+                <input
+                    type="button"
+                    class="button"
+                    id="btn_join"
+                    value="회원 가입하기"
+                    onClick="location.href='/join'"
+                />
+            </div>
+        </div>
+    </body>
+</html>

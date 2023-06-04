@@ -18,13 +18,17 @@
 </style>        
 
 <div class="content-row">
-    <h3 class="content-title">검색 결과 ({{bookList|length}} 건)</h3>
+    <h3 class="content-title">검색 결과 (9 건)</h3>
     <ul class="content-list">
-    {% for book in bookList %}
-        {% with book = book %}
-            {% include 'book.html' %}
-        {% endwith %}
-    {% endfor %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
+        {% include 'book.html' %}
     </ul>
 </div>
 

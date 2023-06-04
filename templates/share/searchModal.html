@@ -12,23 +12,8 @@ $(document).ready(function(){
     $(document).keydown(function(event) {
         if ( event.keyCode == 27 || event.which == 27 ) {
             $(".modal").css('display', 'none');
-        }
-    });	
-
-    $("#searchForm").on("submit", function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: "{{url_for('searchShareBook')}}",
-            type: "POST",
-            data: { searchWord : $("#searchWord").val()},
-            success: function (result) {
-                $('.searchTable').css('display','inline-table');
-                $(".bookList").html('<th id="head-title">제목</th><th id="head-author">저자</th>');
-                $(".bookList").append(result.toString());
-            }
-        });
-    })
-
+        }   
+    });
 });
 
 </script>
@@ -77,9 +62,9 @@ $(document).ready(function(){
       <span id="close" class="close">&times;</span>
         <div class="space">
         <h3 class="searchTitle">도서 검색하기</h3>
-            <form id="searchForm" >
+            <form id="searchForm">
                 <span class='material-symbols-outlined'>Search</span>
-                <input type="text" class="field" id="searchWord" name="searchWord">
+                <input type="text" class="field" id="search" name="search">
             </form>
         </div>
         {% include '/share/bookTable.html' %}

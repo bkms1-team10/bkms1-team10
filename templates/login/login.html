@@ -19,7 +19,7 @@
             data.append("pw", $("#password").val());
 
             $.ajax({
-                url: "/login",
+                url: "/login/",
                 type: "POST",
                 processData: false,
                 contentType: false,
@@ -30,9 +30,9 @@
                 },
                 error: function (result) {
                     if (result.responseText == "ID_NOT_FOUND") {
-                        alert("로그인 ID 없음.");
+                        $("#msg_id").css("display", "block");
                     } else if (result.responseText == "PASSWORD_NOT_FOUND") {
-                        alert("로그인 PW 불일치.");
+                        $("#msg_password").css("display", "block");
                     } else if (result.responseText == "success") {
                         location.href = "/";
                     } else alert("기타 에러");
@@ -146,6 +146,7 @@
         }
 
         .msg {
+            display : none;
             font-size: 12px;
             color: red;
         }
@@ -169,11 +170,9 @@
                         name="userID"
                         autofocus
                     />
-                    {% if message == 'ID_NOT_FOUND' %}
                     <div id="msg_id" class="msg">
                         존재하지 않는 아이디입니다.
                     </div>
-                    {% endif %}
                 </div>
                 <div class="row">
                     <label class="title">비밀번호</label>
@@ -183,11 +182,9 @@
                         id="password"
                         name="password"
                     />
-                    {% if message == 'PASSWORD_NOT_FOUND' %}
                     <div id="msg_password" class="msg">
                         잘못된 패스워드 입니다.
                     </div>
-                    {% endif %}
                 </div>
                 <div class="rowFind"></div>
             </div>
@@ -209,7 +206,7 @@
                     class="button"
                     id="btn_join"
                     value="회원 가입하기"
-                    onClick="location.href='/join'"
+                    onClick="location.href='/join/'"
                 />
             </div>
         </div>

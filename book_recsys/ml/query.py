@@ -1,6 +1,6 @@
-authors_query = '''SELECT * FROM Authors'''
-
 books_query = '''SELECT * FROM Books'''
+
+ratings_query = '''SELECT * FROM Ratings'''
 
 reviews_query = '''SELECT * FROM Reviews'''
 

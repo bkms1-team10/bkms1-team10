@@ -11,7 +11,9 @@
     │   ├── utils.py
     │   ├── query.py
     │   ├── review_keywords.py
-    │   └── book_recsys.py
+    │   ├── book_recsys.py
+    │   ├── 확인용)review_keywords.ipynb
+    │   └── 확인용)book_recsys.ipynb
     ├── resources
     │   └── project.db
     └── results

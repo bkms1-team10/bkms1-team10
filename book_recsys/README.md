@@ -7,6 +7,7 @@
     ├── _install
     │   └── install.sh
     ├── ml
+    │   ├── config.py
     │   ├── utils.py
     │   ├── query.py
     │   ├── review_keywords.py
@@ -19,15 +20,15 @@
 ```
 
 ## process
-##### 1. 필요한 패키지 설치
+#### 1. 필요한 패키지 설치
 - 실행이 안되는 경우 `bash _install/install.sh`나 `. _install/install.sh`로 실행
 - 가상환경을 사용할 경우 line14~17의 주석을 지우고 실행
 ```
 sh _install/install.sh
 ```
 
-##### 2. 책별 리뷰 키워드 & 유저별 책 추천
-- 실행 전에 config.py파일에서 `WORKING_DIRECTORY`를 본인의 경로에 맞게 수정
+#### 2. 책별 리뷰 키워드 & 유저별 책 추천
+- 실행 전에 `config.py`파일에서 `WORKING_DIRECTORY`를 본인의 경로에 맞게 수정
 - 아래 py파일들을 실행하며 경로 문제가 발생하는 경우 `book_recsys/ml` 위치에서 실행
 
 

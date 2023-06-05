@@ -61,28 +61,30 @@ def login():
         return redirect(url_for('home'))
     else:
         if request.method == 'POST':
-            data = request.form
 
-            id = data['id']
-            pw = data['pw']
+            id = request.form['userID']
+            pw = request.form['password']
+
             base.db.session.query(Users).order_by(Users.id.desc())
             user = Users.query.filter(Users.user_id == id).first()
             
-            
+            header = 'login'
+
             ##로그인 정보 일치하는 지 확인
             ##1) 아이디 검색
             if user is None:
                 current_app.logger.info('%s, / : none id' % (id))
-                return 'ID_NOT_FOUND'
+                return render_template("/login/login.html", status=header, message='ID_NOT_FOUND')
             
             ##2) 아이디+비밀번호 검색
             if user.pw != pw :
                 current_app.logger.info('%s, / : PASSWORD_NOT_FOUND ' % (id))
-                return 'PASSWORD_NOT_FOUND'
+                return render_template("/login/login.html", status=header, message='PASSWORD_NOT_FOUND')
             
             session["userID"] = id
             current_app.logger.info("로그인 성공")
-            return "success"
+            return redirect(url_for('home'))
+        
         else:
             header='login'
             return render_template("/login/login.html", status=header)
@@ -158,13 +160,75 @@ def landing():
 
 
 
-@app.route('/share/')
+@app.route('/share/', methods=['GET', 'POST'])
 def share():
     if 'userID' in session:
         header='logout'
-        return render_template("/share/share.html", status=header)
+
+        ##데이터 불러오기 예시
+        bookList = []
+        book1 = {}
+        book1['book_id'] = "001"
+        book1['title']="해리포터와 마법사의 돌"
+        bookList.append(book1)
+
+        book2 = {}
+        book2['book_id'] = "002"
+        book2['title']="해리포터와 비밀의 방"
+        bookList.append(book2)
+
+        book3 = {}
+        book3['book_id'] = "003"
+        book3['title']="해리포터와 아즈카반의 죄수"
+        bookList.append(book3)
+
+        book4 = {}
+        book4['book_id'] = "004"
+        book4['title']="해리포터와 불의 잔"
+        bookList.append(book4)
+        
+        return render_template("/share/share.html", status=header, bookList=bookList)
+
     else:
-        return redirect(url_for('landing')) 
+        return redirect(url_for('landing'))    
+
+@app.route('/searchShareBook/', methods=['POST'])
+def searchShareBook():
+    data = request.form['searchWord']
+
+    ##데이터 불러오기 예시
+    searchList = []
+    book1 = {}
+    book1["id"] = "001"
+    book1["title"]="해리포터와 마법사의 돌"
+    book1["author"]="J.K 롤링"
+    searchList.append(book1)
+
+    book2 = {}
+    book2["id"] = "002"
+    book2["title"]="해리포터와 비밀의 방"
+    book2["author"]="J.K 롤링"
+    searchList.append(book2)
+
+    book3 = {}
+    book3["id"] = "003"
+    book3["title"]="해리포터와 아즈카반의 죄수"
+    book3["author"]="J.K 롤링"
+    searchList.append(book3)
+
+    book4 = {}
+    book4["id"] = "004"
+    book4["title"]="해리포터와 불의 잔"
+    book4["author"]="J.K 롤링"
+    searchList.append(book4)    
+
+    return render_template("/share/tableCell.html", searchList=searchList)
+
+@app.route('/addShareBook/<string:book_id>', methods=['GET'])
+def addShareBook(book_id):
+    print(book_id);
+    return redirect(url_for('share'))  
+
 
 
 from models.user import Books 

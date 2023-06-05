@@ -1,3 +1,6 @@
+.content-item{
+    height : fit-content;
+}
 .imgbox{
     height:350px;
     margin-bottom:5px;

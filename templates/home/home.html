@@ -49,23 +49,23 @@
 </style>        
 
 <head>
-<meta charset="UTF-8">
-<title>Book Review</title>
+    <meta charset="UTF-8">
+    <title>Book Review</title>
 </head>
 <body>
-	{% include 'header.html' %}
-	<div id="innerForm">
-        {% for key, value in seriesList.items()%}        
+    {% include 'header.html' %}
+    <div id="innerForm">
+        {% for key, value in seriesList.items() %}
         <div class="content-row">
-            <h2 class="content-title">{{key}}</h2>
+            <h2 class="content-title">{{ key }}</h2>
             <ul class="content-list">
                 {% for book in value %}
-                    {% with book = book%}
+                    {% with book=book %}
                         {% include 'book.html' %}
                     {% endwith %}
                 {% endfor %}
             </ul>
         </div>
         {% endfor %}
-	</div>
+    </div>
 </body>

@@ -3,7 +3,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from base import db
 
 class Users(db.Model):
-    
 
     id = db.Column(db.String, primary_key=True)
     # id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)

@@ -108,7 +108,7 @@
 			if($("#address").val() == ''){ $("#msg_address").css('display', 'block'); $("#detailAddress").focus(); return false; }
 			else{	$("#msg_address").css('display', 'none');}
 		 	$("#address").attr("disabled", false);
-/*            
+            
             var data = new FormData();
             data.append("userid", $("#userID").val());
             data.append("password", $("#password").val());
@@ -116,7 +116,7 @@
             data.append("email", $("#email").val());
             data.append("lat", $("#lat").val());
             data.append("long", $("#long").val());
-*/
+
 			$("#registerForm").attr("action","/join/").submit();
 
 		});

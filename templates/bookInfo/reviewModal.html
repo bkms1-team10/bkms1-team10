@@ -18,13 +18,16 @@ $(document).ready(function(){
             $("#reviewModal").css('display', 'none');
         }   
     });
+
+    $("#reviewAddBtn").click(function(){
+        $("#reviewForm").attr("action","/writeReview/{{id}}").submit();
+    });
 });
 
 function resize(obj) {
     obj.style.height = 'auto';
     obj.style.height = (obj.scrollHeight) + 'px';
 }
-
 
 </script>
 <style>
@@ -76,7 +79,7 @@ function resize(obj) {
       <span id="review_close" class="close">&times;</span>
         <div class="space">
         <h3 class="modalTitle">리뷰 작성하기</h3>
-            <form id="reviewForm">
+            <form id="reviewForm" method="post">
                 <textarea class="reviewArea" id="reviewArea" name="reviewArea" maxlength="300" oninput="resize(this)" rows="1"></textarea>
             </form>
         </div>

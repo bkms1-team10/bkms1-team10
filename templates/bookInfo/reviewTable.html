@@ -10,11 +10,26 @@
         border-bottom: 1px solid #ddd;
     }
 
+    .name, .review_rate{
+        display: inline-block;
+    }
+    
+    .name{
+        margin-right:5px;
+    }
 </style>
 
 <table class="reviewTable">
-    {% include '/bookInfo/reviewCell.html' %} 
-    {% include '/bookInfo/reviewCell.html' %}
-    {% include '/bookInfo/reviewCell.html' %}
-    {% include '/bookInfo/reviewCell.html' %}
+    {% for i in  range(reviewList | length) %}
+    <tr class="reviewRow"> 
+        <td class="bookTitle">
+            <span class="material-symbols-outlined profileIcon">account_circle</span>
+            <div class="profile">
+                <div class="name">{{reviewList[i]['nickname']}}</div> <div class="review_rate">✨{{reviewList[i]['rating'] | float | round(1) }}</div>
+                <div class="review">{{reviewList[i]['review']}}</div>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+
 </table>

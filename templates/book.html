@@ -2,7 +2,7 @@
     <input type="hidden" value="{{book.book_id}}">
     <div class="content" onClick="location.href='/bookInfo/{{book.book_id}}'">
         <div class="imgbox">
-            <img class="content-img" src="/static/images/sample.png">
+            <img class="content-img" src="{{book.image_url}}">
         </div>
         <div class="content-description">
             <div class="book-title">{{book.title}}</div>

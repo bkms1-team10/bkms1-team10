@@ -15,6 +15,14 @@ from schemas.user import BooksSchema
 from flask import current_app , jsonify
 
 
+@app.route('/index/')
+def landing():
+    if 'userID' in session:
+        return redirect(url_for('home'))
+    else:
+        return render_template("index.html")
+
+
 
 @app.route('/get_books/', methods=['GET'])
 def get_books():
@@ -135,17 +143,134 @@ def idCheck():
     ## 2)중복이면 code = "1"
     else:
         code = "1"
-
     return code
 
+from models.user import Books 
+from schemas.user import BooksSchema
 
-@app.route('/index/')
-def landing():
-    if 'userID' in session:
-        return redirect(url_for('home'))
+@app.route('/')
+def home():
+    if 'userID'  in  session:
+        header='logout'
+        
+        seriesList = {}
+        title1 = "평균 별점이 높은 책"
+        seriesList[title1] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(100)       
+        
+        title2 = "취미"
+        seriesList[title2] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(100)
+        return render_template("/home/home.html", status=header, seriesList=seriesList)
+
     else:
-        return render_template("index.html")
+        return redirect(url_for('landing'))
+    
+@app.route('/bookInfo/<int:id>')
+def book_info(id):
+    if 'userID' in session:
+        header='logout'
+        print(session["userID"])
+        # 해당 책의 ID를 이용하여 책 상세 정보를 가져온다.
+        book = base.db.session.query(Books).filter(Books.book_id == id).first()
+        if book:
+            ## 유저가 이전에 기록한 평점이 있는지 확인
+            ## 있다면 rating 지정
+            userRating = 0
+            
+            ## 유저 위치 정보(북 쉐어 찾을 때 지도 중심 설정)
+            userLoc = ["37.553091", "126.845341"]
 
+            ## 북 쉐어 리스트
+            bookShareList = []
+            user1 = {}
+            user1['nickname'] = "닉네임1"
+            user1['email'] = "aaa@bbb.ccc"
+            user1['lat']="37.5537"
+            user1['long']="126.840"
+            bookShareList.append(user1)
+
+            user2 = {}
+            user2['nickname'] = "닉네임2"
+            user2['email'] = "ddd@eee.ffff"
+            user2['lat']="37.5535"
+            user2['long']="126.842"
+            bookShareList.append(user2)
+
+            ## 리뷰 리스트
+            reviewList = []
+
+            review1 = {}
+            review1['nickname'] = '닉네임1'
+            review1['rating'] = '3'
+            review1['review'] = '재미있었다'
+            reviewList.append(review1)
+
+            review2 = {}
+            review2['nickname'] = '닉네임2'
+            review2['rating'] = '2'
+            review2['review'] = '노잼'
+            reviewList.append(review2)
+
+            review3 = {}
+            review3['nickname'] = '닉네임3'
+            review3['rating'] = '5'
+            review3['review'] = '최고입니다'
+            reviewList.append(review3)
+
+            review4 = {}
+            review4['nickname'] = '닉네임4'
+            review4['rating'] = '1.5'
+            review4['review'] = '개노잼'
+            reviewList.append(review4)
+
+            return render_template("/bookinfo/bookinfo.html", status=header, book=book, id=id, userRating=userRating, userLoc = userLoc, bookShareList=bookShareList, reviewList=reviewList)
+        else:
+            return render_template("/error/404.html")
+    else:
+        return redirect(url_for('landing'))
+
+@app.route('/writeReview/<int:id>', methods=['POST'])
+def writeReview(id):
+    userID = session["userID"]
+    review = request.form['reviewArea']
+    print("review : ", id, userID, review)
+    return redirect(url_for('book_info', id=id))
+
+@app.route('/deleteRating/', methods=['POST'])
+def deleteRating():
+    userID = session["userID"]
+    bookID = request.form['bookID']
+    print("delete : ", userID, bookID)
+    return "Delete Rating"
+
+@app.route('/insertRating/', methods=['POST'])
+def insertRating():
+    userID = session["userID"]
+    bookID = request.form['bookID']
+    rating = request.form['rating']
+    print("insert : ", userID, bookID, rating)
+    return "Insert Rating"
+
+
+@app.route('/search/', methods=['GET', 'POST'])
+def search():
+    if 'userID' in session:
+        header='logout'
+
+        if request.method == 'GET':
+            return render_template("/search/search.html", status=header, searched=False)
+        
+        else:
+            ##검색창 입력단어
+            searchWord = request.form["searchWord"]
+            bookList = base.db.session.query(Books).filter(Books.title.like("%"+searchWord+"%")).all()
+            #book_data = BooksSchema().dump(book_data, many=True)
+            
+            return render_template("/search/search.html", status=header, searched=True, bookList=bookList)
+
+
+    else:
+        return redirect(url_for('landing'))
+    
 
 
 @app.route('/share/', methods=['GET', 'POST'])
@@ -218,78 +343,6 @@ def addShareBook(book_id):
     return redirect(url_for('share'))  
 
 
-
-from models.user import Books 
-from schemas.user import BooksSchema
-
-@app.route('/')
-def home():
-    if 'userID'  in  session:
-        header='logout'
-        
-        seriesList = {}
-        title1 = "평균 별점이 높은 책"
-        seriesList[title1] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(100)       
-        
-        title2 = "취미"
-        seriesList[title2] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(100)
-        return render_template("/home/home.html", status=header, seriesList=seriesList)
-
-    else:
-        return redirect(url_for('landing'))
-    
-@app.route('/bookInfo/<int:id>')
-def book_info(id):
-    if 'userID' in session:
-        header='logout'
-        print(session["userID"])
-        # 해당 책의 ID를 이용하여 책 상세 정보를 가져온다.
-        book = base.db.session.query(Books).filter(Books.book_id == id).first()
-        if book:
-            ## 유저 위치 정보(북 쉐어 찾을 때 지도 중심 설정)
-            userLoc = ["37.553091", "126.845341"]
-
-            ## 북 쉐어 리스트
-            bookShareList = []
-            user1 = {}
-            user1['nickname'] = "닉네임1"
-            user1['email'] = "aaa@bbb.ccc"
-            user1['lat']="37.5537"
-            user1['long']="126.840"
-            bookShareList.append(user1)
-
-            user2 = {}
-            user2['nickname'] = "닉네임2"
-            user2['email'] = "ddd@eee.ffff"
-            user2['lat']="37.5535"
-            user2['long']="126.842"
-            bookShareList.append(user2)
-            return render_template("/bookinfo/bookinfo.html", status=header, book=book, userLoc = userLoc, bookShareList=bookShareList)
-        else:
-            return render_template("/error/404.html")
-    else:
-        return redirect(url_for('landing'))
-
-@app.route('/search/', methods=['GET', 'POST'])
-def search():
-    if 'userID' in session:
-        header='logout'
-
-        if request.method == 'GET':
-            return render_template("/search/search.html", status=header, searched=False)
-        
-        else:
-            ##검색창 입력단어
-            searchWord = request.form["searchWord"]
-            bookList = base.db.session.query(Books).filter(Books.title.like("%"+searchWord+"%")).all()
-            #book_data = BooksSchema().dump(book_data, many=True)
-            
-            return render_template("/search/search.html", status=header, searched=True, bookList=bookList)
-
-
-    else:
-        return redirect(url_for('landing'))
-    
 
 
 app.debug = True

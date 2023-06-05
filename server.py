@@ -186,6 +186,7 @@ def home():
 def book_info(id):
     if 'userID' in session:
         header='logout'
+        print(session["userID"])
         # 해당 책의 ID를 이용하여 책 상세 정보를 가져온다.
         book = base.db.session.query(Books).filter(Books.book_id == id).first()
         if book:

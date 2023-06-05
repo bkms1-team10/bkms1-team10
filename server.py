@@ -68,7 +68,7 @@ def login():
             base.db.session.query(Users).order_by(Users.id.desc())
             user = Users.query.filter(Users.user_id == id).first()
             
-            """
+            
             ##로그인 정보 일치하는 지 확인
             ##1) 아이디 검색
             if user is None:
@@ -79,7 +79,7 @@ def login():
             if user.pw != pw :
                 current_app.logger.info('%s, / : PASSWORD_NOT_FOUND ' % (id))
                 return 'PASSWORD_NOT_FOUND'
-            """
+            
             session["userID"] = id
             current_app.logger.info("로그인 성공")
             return "success"
@@ -125,6 +125,10 @@ def join():
             users['user_id'] = request.form['userID']
             users['pw'] = request.form['password']
             users['nickname'] = request.form['username']
+            users['address'] = ""
+            users['address_gu'] = ""
+            users['address_dong'] = ""
+            users['lat_long'] = ""
             users['email'] = request.form['email']
             users['lat'] = request.form['lat']
             users['long'] = request.form['long']

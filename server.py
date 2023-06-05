@@ -144,10 +144,17 @@ def join():
 
 @app.route('/idCheck/', methods=['POST'])
 def idCheck():
-    data = request.form['userID']
-    code = "0"
+    id = request.form['userID']
+    
+    base.db.session.query(Users).order_by(Users.id.desc())
+    user = Users.query.filter(Users.user_id == id).first()
     ## 1)data(유저가 입력한 아이디) 중복인지 확인
+    if user is None:
+        code = "0"
     ## 2)중복이면 code = "1"
+    else:
+        code = "1"
+
     return code
 
 

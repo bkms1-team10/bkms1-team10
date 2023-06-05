@@ -35,25 +35,6 @@ def get_books():
     return jsonify(books_data = books_data)
 
 
-
-
-@app.route('/search_book/', methods=['POST'])
-def search_book():
-    """
-    책 검색창 
-    """
-    data = request.form
-
-    title = data['title']
-
-
-    book_data = base.db.session.query(Books).filter(Books.title.like("%"+title+"%")).all()
-    book_data = BooksSchema().dump(book_data, many=True)
-
-
-    return jsonify(books_data = book_data)
-
-
 @app.route('/login/', methods=['GET', 'POST'])
 def login():     
     ## 세션 정보 있으면 home로 이동
@@ -289,11 +270,23 @@ def book_info(id):
     else:
         return redirect(url_for('landing'))
 
-@app.route('/search/')
+@app.route('/search/', methods=['GET', 'POST'])
 def search():
     if 'userID' in session:
         header='logout'
-        return render_template("/search/search.html", status=header)
+
+        if request.method == 'GET':
+            return render_template("/search/search.html", status=header, searched=False)
+        
+        else:
+            ##검색창 입력단어
+            searchWord = request.form["searchWord"]
+            bookList = base.db.session.query(Books).filter(Books.title.like("%"+searchWord+"%")).all()
+            #book_data = BooksSchema().dump(book_data, many=True)
+            
+            return render_template("/search/search.html", status=header, searched=True, bookList=bookList)
+
+
     else:
         return redirect(url_for('landing'))
     

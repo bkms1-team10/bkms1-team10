@@ -6,7 +6,7 @@
         </div>
         <div class="content-description">
             <div class="book-title">{{book.title}}</div>
-            <div class="rating"> <span>평균</span> ✨<span>{{book.average_rating}}</span> 
+            <div class="rating"> <span>평균</span> ✨<span>{{book.average_rating | float | round(1)}}</span> 
             </div>
         </div>
     </div>

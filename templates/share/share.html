@@ -31,19 +31,40 @@
         font-size: 3em;
         color: #626060;
     }
-    
+
+    .content-list{
+        margin-left: 0px;
+        padding-left: 0px;
+        display: grid;
+        grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+        gap: 25px 20px;
+        cursor: pointer;
+    }
+
+    .imgbox{
+        height:350px;
+        margin-bottom:5px;
+    }
+
+    .content-img{
+        width:250px;
+        max-height:350px
+    }
+
+    .book-title{
+        margin-bottom: 3px;
+        font-size: large;
+        font-weight: 500;
+        color: #313131;
+    }
 </style>        
 
 <head>
 <meta charset="UTF-8">
-<title>Book Share</title>
+<title>Book Review</title>
 </head>
 <body>
 	{% include 'header.html' %}
-	<!-- //로그인 된 상태에서 로그인 창으로 넘어가기 방지
-	if (session_id != null)	response.sendRedirect("/product/list");
-	==> server.py에서 처리
-	-->
 	<div id="innerForm">
         <div class='row'>
             <div class="titleBox">
@@ -53,7 +74,30 @@
             <button class='shareBtn' id="shareBtn"><span class='material-symbols-outlined'>add_box</span></button>
             {% include '/share/searchModal.html' %}
         </div>
-        {% include '/share/shareList.html' %}
+
+        <div class="content-row">
+            <h3 class="content-title">쉐어링 목록</h3>
+            <ul class="content-list">
+            {% for book in bookList %}
+            <li class="content-item">
+                <div class="content">
+                    <input type="hidden" value="{{book.book_id}}">
+                    <div class="imgbox">
+                        <img class="content-img" src="/static/images/sample.png">
+                    </div>
+                    <div class="content-description">
+                        <div class="book-title">{{book.title}}</div>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+            {% include '/share/deleteModal.html' %}
+        </div>
+        
+<!--
+        {% include '/share/addBookModal.html' %}
+-->
 	</div>
 
 </body>

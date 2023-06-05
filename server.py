@@ -2,9 +2,6 @@ from flask import Flask, render_template, redirect, url_for, session, request, c
 import os
 from flask_sqlalchemy import SQLAlchemy
 import base
-from models.user import Books ,Users
-from schemas.user import BooksSchema
-
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -93,7 +90,7 @@ def login():
 
 
 
-@app.route('/join/', methods=['GET', 'POST']))
+@app.route('/join/', methods=['GET', 'POST'])
 def join():
     ## 세션 정보 있으면 home로 이동
     if 'userID' in  session:
@@ -134,7 +131,10 @@ def join():
         else:
             header='login'
             return render_template("/login/join.html", status=header)
-        
+       
+
+from models.user import Books ,Users
+from schemas.user import BooksSchema
 
 
 @app.route('/idCheck/', methods=['POST'])

@@ -1,75 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <!-- script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-    <style>
-        html {
-            height: 100%;
-        }
+<!-- script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+<style>
+	html{
+		height: 100%;
+	}
 
-        body {
-            background-color: #424141;
-            position: relative;
-            margin: 0;
-            width: 90%;
-            height: 90%;
-        }
+	body{
+		background-color: #424141;
+		position: relative;
+		margin:0;
+		width: 90%;
+		height: 90%;
+	}
 
-        .indexBox {
-            position: absolute;
-            top: 50%;
-            left: 55%;
-            margin: -150px 0 0 -150px;
-            text-align: center;
-        }
+	.indexBox{
+		position: absolute;
+		top: 50%;
+		left: 55%;
+		margin:-150px 0 0 -150px;
+		text-align: center;
+	}
 
-        #btn_start {
-            color: #313131 !important;
-            background-color: #ffffff !important;
-            border-color: #313131 !important;
-            border-width: 1px;
-            transition-duration: 0.4s;
-        }
+	#btn_start{	
+		color: #313131 !important;
+		background-color: #FFFFFF !important;
+		border-color: #313131 !important;
+		border-width : 1px;
+		transition-duration: 0.4s;
+	}
 
-        #btn_start:hover {
-            color: #424141 !important;
-            background-color: #ffd585 !important;
-        }
+	#btn_start:hover{
+ 	color: #424141 !important;
+ 	background-color: #FFD585 !important;
+}
 
-        .button {
-            padding: 5px;
-            margin: auto;
-            cursor: pointer;
-            border-radius: 50px;
-            width: 100%;
-            max-width: 240px;
-            min-width: 160px;
-            height: 54px !important;
-            min-height: 54px;
-            font-size: 14px !important;
-            font-weight: 700;
-        }
-    </style>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Landing Page</title>
-    </head>
-    <body>
-        <div class="indexBox">
-            <div class="logoBox">
-                <img
-                    class="logo"
-                    src="/static/images/indexLogo.png"
-                    alt="logo"
-                    width="350"
-                />
-            </div>
-            <input
-                type="button"
-                class="button"
-                id="btn_start"
-                value="시작하기"
-                onClick="location.href='/login/'"
-            />
-        </div>
-    </body>
-</html>
+	.button{
+	padding: 5px;
+	margin : auto;
+	cursor : pointer;
+	border-radius : 50px;
+	width : 100%;
+	max-width : 240px;
+	min-width : 160px;
+	height : 54px ! important;
+	min-height : 54px;
+	font-size : 14px !important;
+	font-weight : 700;
+	}
+
+	
+</style>
+<head>
+<meta charset="UTF-8">
+<title>Landing Page</title>
+</head>
+<body>
+	<div class="indexBox">
+		<div class="logoBox">
+			<img class="logo" src="/static/images/indexLogo.png" alt="logo" width="350">
+		</div>
+		<input type="button" class="button" id="btn_start" VALUE="시작하기" onClick="location.href='/login'">
+	</div>
+</body>

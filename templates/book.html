@@ -1,13 +1,12 @@
-<link rel="stylesheet" href="/static/css/defaultBook.css">
-
 <li class="content-item">
+    <input type="hidden" value="{{book.book_id}}">
     <div class="content" onClick="location.href='/bookInfo/'">
         <div class="imgbox">
             <img class="content-img" src="/static/images/sample.png">
         </div>
         <div class="content-description">
-            <div class="book-title">Book Title</div>
-            <div class="rating"> <span>평균</span> ✨<span>3.5</span> 
+            <div class="book-title">{{book.title}}</div>
+            <div class="rating"> <span>평균</span> ✨<span>{{book.average_rating}}</span> 
             </div>
         </div>
     </div>

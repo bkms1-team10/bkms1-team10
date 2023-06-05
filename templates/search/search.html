@@ -1,140 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <script>
-        function Search_Book() {
-            if (document.getElementById("search").value == "") {
-                alert("검색어를 입력하세요");
-                document.getElementById("search").focus();
-                return false;
-            }
+<script>
+	$(document).ready(function(){					
+		$("#btn_register").click(function(){
+            document.searchForm.action = '/search/';
+	        document.searchForm.submit();
+		});
+	});
+	
+</script>
 
-            var data = new FormData();
-            data.append("title", $("#search").val());
+<link rel="stylesheet" href="/static/css/defaultBook.css">
+<style>
+    #innerForm{
+        margin : auto;
+        width : 1080px;
+        min-width: 1080px;
+    }
 
-            $.ajax({
-                url: "/search_book",
-                type: "POST",
-                processData: false,
-                contentType: false,
-                dataType: "json",
-                data: data,
-                success: function (result) {
-                    html = "";
-                    $("#book_list").html(html);
-                    for (let data of result["books_data"]) {
-                        html += ' <li class="content-item">';
-                        html +=
-                            '     <div class="content" onClick=" location.href= ' +
-                            "'" +
-                            " /bookInfo/" +
-                            data.book_id +
-                            "'" +
-                            '">';
-                        html += '          <div class="imgbox">';
-                        html +=
-                            '          <img class="content-img" src="' +
-                            data.image_url +
-                            '">';
-                        html += "      </div>";
-                        html += '      <div class="content-description">';
-                        html +=
-                            '         <div class="book-title">' +
-                            data.title +
-                            "</div>";
-                        html +=
-                            '         <div class="rating"> <span>평균</span> ✨<span>' +
-                            data.average_rating +
-                            "</span> ";
-                        html += "   </div>";
-                        html += "     </div>";
-                        html += "      </div>";
-                        html += "       </li>";
-                    }
+    h2{
+        margin-left:174px;
+    }
 
-                    $("#book_list").append(html);
+    h3{
+        text-align :left;
+        margin : 30px 0px;
+    }
 
-                    $("#count").text(
-                        "검색 결과 (" + result["books_data"].length + ")건 "
-                    );
-                },
-                error: function (result) {
-                    alert("기타 에러");
-                },
-            });
-        }
-    </script>
+    #searchForm{
+        margin-left: auto;
+        margin-right:auto;
+        margin-bottom: 30px;
+        width : 700px;
+        border : 1px solid #BFBFBF;
+        padding : 10px 15px;
+    }
 
-    <style>
-        #innerForm {
-            margin: auto;
-            width: 1080px;
-            min-width: 1080px;
-        }
-        .content-list {
-            margin-left: 0px;
-            padding-left: 0px;
-            display: grid;
-            grid-template: repeat(4, 1fr) / repeat(4, 1fr);
-            gap: 25px 20px;
-        }
-        h2 {
-            margin-left: 174px;
-        }
+    span{
+        width:30px;
+        vertical-align: middle;
+    }
 
-        h3 {
-            text-align: left;
-            margin: 30px 0px;
-        }
+    .field{
+        font-size : 18px;
+        width: 660px;
+        line-height:24px;
+        border-color: transparent;
+        box-sizing : border-box;
+    }
 
-        #searchForm {
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 30px;
-            width: 700px;
-            border: 1px solid #bfbfbf;
-            padding: 10px 15px;
-        }
+    .field:focus{
+        outline: none;    
+    }
 
-        span {
-            width: 30px;
-            vertical-align: middle;
-        }
+</style>        
 
-        .field {
-            font-size: 18px;
-            width: 660px;
-            line-height: 24px;
-            border-color: transparent;
-            box-sizing: border-box;
-        }
+<head>
+<meta charset="UTF-8">
+<title>Search</title>
+</head>
+<body>
+	{% include 'header.html' %}
+	<div id="innerForm">
+        <h2>도서 검색하기</h2>
+        <form id="searchForm" action="/search/" method="POST">
+            <span class='material-symbols-outlined'>Search</span>
+            <input type="text" class="field" id="searchWord" name="searchWord">
+        </form>
+        {% if searched %}
+        {% include '/search/searchResult.html' %}
+        {% endif %}
+	</div>
 
-        .field:focus {
-            outline: none;
-        }
-    </style>
-
-    <head>
-        <meta charset="UTF-8" />
-        <title>Search</title>
-    </head>
-    <body>
-        {% include 'header.html' %}
-        <div id="innerForm">
-            <h2>도서 검색하기</h2>
-            <form id="searchForm">
-                <span class="material-symbols-outlined" onclick="Search_Book()"
-                    >Search</span
-                >
-
-                <input type="text" class="field" id="search" name="search" />
-            </form>
-
-            <div class="content-row">
-                <h3 class="content-title" id="count">검색 결과 (0 건)</h3>
-                <ul class="content-list" id="book_list"></ul>
-            </div>
-        </div>
-    </body>
-</html>
+</body>

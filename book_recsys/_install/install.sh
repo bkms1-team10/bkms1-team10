@@ -11,10 +11,10 @@ function print_title {
 }
 
 ############################################################
-print_title "create env ..."
+# print_title "create env ..."
 
-conda create --yes -n bkms1_team10 python=3.8
-conda activate bkms1_team10
+# conda create --yes -n bkms1_team10 python=3.8
+# conda activate bkms1_team10
 
 ############################################################
 print_title "upgrade pip ..."

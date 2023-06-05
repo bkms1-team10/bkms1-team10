@@ -1,16 +1,20 @@
-import argparse
+import warnings
+warnings.filterwarnings('ignore')
+
+import os
+import sys
+sys.path.append('../')
+
 import numpy as np
 import pandas as pd
+
 from scipy.sparse.linalg import svds
 from sklearn.feature_extraction.text import TfidfVectorizer  # tf-idf
 from sklearn.decomposition import LatentDirichletAllocation  # LDA
 
+from ml.config import *
+from ml.query import *
 from ml.utils import *
-
-import warnings
-warnings.filterwarnings('ignore')
-
-os.environ["NCCL_DEBUG"] = "INFO"
 
 
 def recommend_books(df_svd_preds, user_idx, ori_books_df, ori_ratings_df, num_recommendations, default):
@@ -60,7 +64,7 @@ def clustering_books(vectorizer, num_labels, book_rcmm):
                                           max_iter=1)
     lda_top = lda_model.fit_transform(X)
 
-    terms = vectorizer.get_feature_names_out()  # 단어 집합. 1,000개의 단어가 저장됨.
+    terms = vectorizer.get_feature_names()  # 에러나는 경우 get_feature_names_out()로 시도
     keywords = get_topics(lda_model.components_, terms)
 
     result_dict = {}
@@ -77,50 +81,44 @@ def clustering_books(vectorizer, num_labels, book_rcmm):
     return result_dict, keywords
 
 
-def main(args):
+def main():
 
-    book_rcmm_dir_path = os.path.join(os.environ['WORKING_DIRECTORY'], args.book_rcmm_dir)
-    os.makedirs(book_rcmm_dir_path, exist_ok=True)
+    # db connect
+    db_path = os.path.join(WORKING_DIRECTORY, 'resources/project.db')
+    con = connection(db_path)
 
-    dataset_dir_path = os.path.join(os.environ['WORKING_DIRECTORY'], args.dataset_dir)
-    curr_date = seconds_to_timestring(get_current_time_seconds(), '%Y-%m-%d')
-    dataset_date_path = os.path.join(dataset_dir_path, 'stnd_ymd={0}'.format(curr_date))
+    print('Loading dataset...')
+    ratings = read_table(con, ratings_query)
+    books = read_table(con, books_query)
+    users = read_table(con, users_query)
 
-    log_info('Load datasets...')
-    books_df = pd.read_csv(os.path.join(dataset_date_path, 'books.csv'),
-                           usecols=['book_id', 'description', 'average_rating'])
-    reviews_df = pd.read_csv(os.path.join(dataset_date_path, 'reviews.csv'),
-                             usecols=['user_id', 'book_id', 'rating'])
-    users_df = pd.read_csv(os.path.join(dataset_date_path, 'users.csv'), usecols=['user_id'])
-
+    print('Preprocessing...')
+    books_df = books[['book_id', 'description', 'average_rating']]
+    
     # 읽은 횟수가 10보다 적은 책은 삭제
-    log_info('Preprocessing...')
-    counts = reviews_df['book_id'].value_counts()
-    valid_book_ids = counts[counts >= args.min_book_logs_cnt].index
-    reviews_df = reviews_df[reviews_df['book_id'].isin(valid_book_ids)]
+    counts = ratings['book_id'].value_counts()
+    valid_book_ids = counts[counts >= 10].index
+    ratings_df = ratings[ratings['book_id'].isin(valid_book_ids)]
+
+    ratings_df = ratings_df[['user_id', 'book_id',  'rating']]
 
     # 인덱스로 매핑된 user_id 열 추가
-    user_mapping = {user_id: idx + 1 for idx, user_id in enumerate(reviews_df['user_id'].unique())}
+    user_mapping = {user_id: idx+1 for idx, user_id in enumerate(ratings_df['user_id'].unique())}
+    ratings_df['user_idx'] = ratings_df['user_id'].map(user_mapping)
+    ratings_df['user_idx'] = ratings_df['user_idx'].astype(int)
 
-    reviews_df['user_idx'] = reviews_df['user_id'].map(user_mapping)
-    reviews_df['user_idx'] = reviews_df['user_idx'].astype(int)
+    users_df = users[['user_id']]
 
     users_df['user_idx'] = users_df['user_id'].map(user_mapping)
     users_df['user_idx'] = users_df['user_idx'].fillna(0)
     users_df['user_idx'] = users_df['user_idx'].astype(int)
-    users_df = users_df.head(100)  # 테스트로 100개 행만
 
-    # 이력 없는 유저들에게는 평점이 4보다 크면서 이력 개수가 많은 책들을 추천
-    default = books_df[books_df['average_rating'] > 4.0]
-    log_cnt = reviews_df['book_id'].value_counts()
-    log_cnt = pd.DataFrame({'book_id': list(log_cnt.keys()), 'cnt': list(log_cnt.values)})
-    default = pd.merge(default, log_cnt, on='book_id').sort_values('cnt', ascending=False).iloc[:args.num_recommendations, :]
-    default = default[['book_id', 'description']].set_index('book_id')['description'].to_dict()
-
-    # 각 유저를 행으로, 각 책을 열로하는 피폿테이블 생성
-    log_info('Reviews_df to pivot...')
-    df_user_book_ratings = reviews_df.pivot(
-        index='user_id',
+    # #  테스트로 일부만
+    # ratings_df = ratings_df.iloc[:5000,:]
+    # users_df = users_df[users_df['user_idx'].isin(list(ratings_df.user_idx))]
+    
+    df_user_book_ratings = ratings_df.pivot(
+        index='user_idx',
         columns='book_id',
         values='rating'
     ).fillna(0)
@@ -129,7 +127,7 @@ def main(args):
     user_ratings_mean = np.mean(matrix, axis=1)  # 사용자의 평균 평점
     matrix_user_mean = matrix - user_ratings_mean.reshape(-1, 1)  # 유저-책에 대해 사용자 평균 평점을 뺀 것
 
-    log_info('Running book recsys...')
+    print('Running book recsys...')
     # scipy에서 제공해주는 svd
     # U 행렬, sigma 행렬, V 전치 행렬을 반환.
     U, sigma, Vt = svds(matrix_user_mean, k=12)
@@ -138,32 +136,29 @@ def main(args):
     # U, Sigma, Vt의 내적을 수행하면, 다시 원본 행렬로 복원됨 + 사용자 평균 rating을 적용
     svd_user_predicted_ratings = np.dot(np.dot(U, sigma), Vt) + user_ratings_mean.reshape(-1, 1)
     df_svd_preds = pd.DataFrame(svd_user_predicted_ratings, columns=df_user_book_ratings.columns)
+    
+    # 이력 없는 유저들에게는 평점이 4보다 크면서 이력 개수가 많은 책들을 추천
+    default = books_df[books_df['average_rating']>4.0]
+    log_cnt = ratings_df['book_id'].value_counts()
+    log_cnt = pd.DataFrame({'book_id': list(log_cnt.keys()), 'cnt': list(log_cnt.values)})
+    default = pd.merge(default, log_cnt, on = 'book_id').sort_values('cnt', ascending = False).iloc[:25, :]
+    default = default[['book_id','description']].set_index('book_id')['description'].to_dict()
 
     # 추천
-    users_df['book_rcmm'] = users_df.apply(lambda x: recommend_books(df_svd_preds, x['user_idx'], books_df, reviews_df,
-                                                                     args.num_recommendations, default), axis=1)
-
+    users_df['book_rcmm'] = users_df.apply(lambda x: recommend_books(df_svd_preds, x['user_idx'], books_df, ratings_df, 25, default), axis=1)
+    
+    print('Clustering...')
     vectorizer = TfidfVectorizer(stop_words='english', max_features=1000)  # 상위 1,000개의 단어를 보존
-    users_df[['book_ids', 'keywords']] = users_df.apply(lambda x: clustering_books(vectorizer, args.num_labels, x['book_rcmm']),
+    users_df[['book_ids', 'keywords']] = users_df.apply(lambda x: clustering_books(vectorizer, 5, x['book_rcmm']),
                                                         axis=1, result_type="expand")
     users_df = users_df.drop(columns=['book_rcmm', 'user_idx'])
-    log_info('Saving results...')
-    users_df.to_csv(os.path.join(book_rcmm_dir_path, 'book_rcmm_result.csv'), index=False)
+    
+    print('Saving results...')
+    users_df.to_csv(os.path.join(WORKING_DIRECTORY, 'results/book_rcmm.csv'), index=False)
 
-    log_info('Done')
+    print('Done')
 
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_dir', default='resources/datasets', type=str)
-    parser.add_argument('--book_rcmm_dir', default='results/book_rcmm', type=str)
-    parser.add_argument('--min_book_logs_cnt', default=10, type=int)
-    parser.add_argument('--num_recommendations', default=25, type=int)
-    parser.add_argument('--num_labels', default=5, type=int)
-
-    args = parser.parse_args()
-
-    init_logger()
-
-    main(args)
+    main()

@@ -4,7 +4,7 @@
         if (width == 0)
             $(".comment").text("평가하기");
         else{
-            var rate = $(".range").val();
+            var rate = ($(".range").val() * 1.0 ).toFixed(1);
             $(".comment").text(`${rate}`);
             $(".comment").css("color", "light-gray");
             $(".comment").hover(function(){
@@ -47,7 +47,6 @@
         $(".comment").click(function(){
             $(".range").val(0);
             document.querySelector(`.rating`).style.width = 0;
-
             $.ajax({
 				url : "{{url_for('deleteRating')}}",
 				type : "post",

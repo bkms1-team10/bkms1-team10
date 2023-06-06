@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:\\project.db'
 base.db = SQLAlchemy(app)
 
 
-from models.user import Books ,Users
+from models.user import Books ,Users, Ratings, Reviews
 from schemas.user import BooksSchema
 from flask import current_app , jsonify
 
@@ -54,8 +54,8 @@ def login():
             id = request.form['userID']
             pw = request.form['password']
 
-            base.db.session.query(Users).order_by(Users.id.desc())
-            user = Users.query.filter(Users.user_id == id).first()
+            base.db.session.query(Users).order_by(Users.user_id.desc())
+            user = Users.query.filter(Users.id == id).first()
             
             header = 'login'
 
@@ -70,7 +70,7 @@ def login():
                 current_app.logger.info('%s, / : PASSWORD_NOT_FOUND ' % (id))
                 return render_template("/login/login.html", status=header, message='PASSWORD_NOT_FOUND')
             
-            session["userID"] = id
+            session["userID"] = user.user_id
             current_app.logger.info("로그인 성공")
             return redirect(url_for('home'))
         
@@ -108,12 +108,12 @@ def join():
             lat = request.form['lat']
             long = request.form['long']
 
-            test_query = base.db.session.query(Users).order_by(Users.id.desc())
+            test_query = base.db.session.query(Users).order_by(Users.user_id.desc())
             test_query =test_query.first()
             
             users = {}
-            users['id'] = int(test_query.id) + 1
-            users['user_id'] = request.form['userID']
+            users['user_id'] = int(test_query.id) + 1
+            users['id'] = request.form['userID']
             users['pw'] = request.form['password']
             users['nickname'] = request.form['username']
             users['address'] = ""
@@ -135,8 +135,8 @@ def join():
 def idCheck():
     id = request.form['userID']
     
-    base.db.session.query(Users).order_by(Users.id.desc())
-    user = Users.query.filter(Users.user_id == id).first()
+    base.db.session.query(Users).order_by(Users.user_id.desc())
+    user = Users.query.filter(Users.id == id).first()
     ## 1)data(유저가 입력한 아이디) 중복인지 확인
     if user is None:
         code = "0"
@@ -145,8 +145,8 @@ def idCheck():
         code = "1"
     return code
 
-from models.user import Books 
-from schemas.user import BooksSchema
+#from models.user import Books 
+#from schemas.user import BooksSchema
 
 @app.route('/')
 def home():
@@ -168,13 +168,19 @@ def home():
 def book_info(id):
     if 'userID' in session:
         header='logout'
-        print(session["userID"])
+
         # 해당 책의 ID를 이용하여 책 상세 정보를 가져온다.
         book = base.db.session.query(Books).filter(Books.book_id == id).first()
         if book:
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정
-            userRating = 0
+            userID = session["userID"]
+        
+            rating = Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == id).first()
+            if rating is None:
+                userRating = 0
+            else :
+                userRating = rating.rating
             
             ## 유저 위치 정보(북 쉐어 찾을 때 지도 중심 설정)
             userLoc = ["37.553091", "126.845341"]
@@ -228,18 +234,26 @@ def book_info(id):
     else:
         return redirect(url_for('landing'))
 
-@app.route('/writeReview/<int:id>', methods=['POST'])
-def writeReview(id):
-    userID = session["userID"]
-    review = request.form['reviewArea']
-    print("review : ", id, userID, review)
-    return redirect(url_for('book_info', id=id))
 
 @app.route('/deleteRating/', methods=['POST'])
 def deleteRating():
     userID = session["userID"]
     bookID = request.form['bookID']
+   
+    Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == bookID).delete()
+    base.db.session.commit()
+    
+    """
+    if rating is not None:
+        ratings = {}
+        ratings['user_id'] = session["userID"]
+        ratings['book_id'] = request.form['bookID']
+        ratings = Ratings(** ratings)
+        base.db.session.delete(ratings)
+        base.db.session.commit()
+    """
     print("delete : ", userID, bookID)
+    
     return "Delete Rating"
 
 @app.route('/insertRating/', methods=['POST'])
@@ -247,9 +261,27 @@ def insertRating():
     userID = session["userID"]
     bookID = request.form['bookID']
     rating = request.form['rating']
+
+    test_query = base.db.session.query(Ratings).count()
+
+    ratings = {}
+    ratings['rating_id'] = int(test_query) + 27
+    ratings['user_id'] = session["userID"]
+    ratings['book_id'] = request.form['bookID']
+    ratings['rating'] = request.form['rating']
+    ratings = Ratings(** ratings)
+    base.db.session.add(ratings)
+    base.db.session.commit()
+
     print("insert : ", userID, bookID, rating)
     return "Insert Rating"
 
+@app.route('/writeReview/<int:id>', methods=['POST'])
+def writeReview(id):
+    userID = session["userID"]
+    review = request.form['reviewArea']
+    print("review : ", id, userID, review)
+    return redirect(url_for('book_info', id=id))
 
 @app.route('/search/', methods=['GET', 'POST'])
 def search():

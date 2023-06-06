@@ -4,9 +4,9 @@ from base import db
 
 class Users(db.Model):
 
-    id = db.Column(db.String, primary_key=True)
+    user_id = db.Column(db.String, primary_key=True)
     # id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.String(1000), nullable=True)
+    id = db.Column(db.String(1000), nullable=True)
     pw = db.Column(db.String(1000), nullable=False)
     nickname = db.Column(db.String(1000), nullable=False)
     address = db.Column(db.String(1000), nullable=True)
@@ -27,3 +27,15 @@ class Books(db.Model):
     image_url = db.Column(db.String(1000), nullable=True)
     description = db.Column(db.String(1000), nullable=True)
     average_rating = db.Column(db.String(1000), nullable=True)
+
+
+class Ratings(db.Model):
+    rating_id = db.Column(db.String(1000), primary_key=True)
+    user_id = db.Column(db.String(1000), nullable=False)
+    book_id = db.Column(db.String(1000), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    review_id = db.Column(db.String(1000), nullable=True)
+
+class Reviews(db.Model):
+    review_id = db.Column(db.String(1000), primary_key=True)
+    review_TEXT = db.Column(db.String(1000), nullable=False)

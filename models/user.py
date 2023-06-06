@@ -17,7 +17,7 @@ class Users(db.Model):
     lat = db.Column(db.String(1000), nullable=True)
     long = db.Column(db.String(1000), nullable=True)
     ratings = db.relationship('Ratings', backref='user', lazy=True)
-
+    sharings = db.relationship('Sharings', backref='user', lazy=True)
 
 
 class Books(db.Model):
@@ -29,6 +29,7 @@ class Books(db.Model):
     description = db.Column(db.String(1000), nullable=True)
     average_rating = db.Column(db.String(1000), nullable=True)
     ratings = db.relationship('Ratings', backref='book', lazy=True)
+    sharings = db.relationship('Sharings', backref='books', lazy=True)
 
 
 class Authors(db.Model):
@@ -47,3 +48,7 @@ class Reviews(db.Model):
     review_id = db.Column(db.String(1000), primary_key=True)
     review_TEXT = db.Column(db.String(1000), nullable=False)
     ratings = db.relationship('Ratings', backref='review', lazy=True)
+
+class Sharings(db.Model):
+    user_id = db.Column(db.String(1000), db.ForeignKey('users.user_id'), primary_key=True)
+    book_id = db.Column(db.String(1000), db.ForeignKey('books.book_id'), primary_key=True)

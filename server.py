@@ -2,8 +2,7 @@ from flask import Flask, render_template, redirect, url_for, session, request
 import os
 from flask_sqlalchemy import SQLAlchemy
 import base
-from sqlalchemy.orm import joinedload
-
+from haversine import haversine, Unit
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -11,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:\\project.db'
 base.db = SQLAlchemy(app)
 
 
-from models.user import Books ,Users, Ratings, Reviews, Authors
+from models.user import Books ,Users, Ratings, Reviews, Authors, Sharings
 from schemas.user import BooksSchema, ReviewsSchema
 from flask import current_app , jsonify
 
@@ -164,7 +163,33 @@ def home():
 
     else:
         return redirect(url_for('landing'))
-    
+
+
+def getSharingUser(book_id, user):
+    bookShareList = []
+    userLoc = (user[0], user[1])
+    sharingUser = base.db.session.query(Sharings).join(Sharings.user).filter(Sharings.book_id == book_id).all()
+    """
+    for row in sharingUser:
+        user = {}
+        user['nickname'] = row.user.nickname
+        user['email'] = row.user.email
+        user['lat']=row.user.lat
+        user['long']=row.user.long
+        bookShareList.append(user)
+    """
+    for row in sharingUser:
+        sharingLoc = (row.user.lat, row.user.long)
+        if  haversine(userLoc, sharingLoc) <= 10 :
+            sharingUser = {}
+            sharingUser['nickname'] = row.user.nickname
+            sharingUser['email'] = row.user.email
+            sharingUser['lat']=row.user.lat
+            sharingUser['long']=row.user.long
+            bookShareList.append(sharingUser)
+
+    return bookShareList
+
 @app.route('/bookInfo/<int:id>')
 def book_info(id):
     if 'userID' in session:
@@ -193,6 +218,7 @@ def book_info(id):
             #userLoc = ["37.553091", "126.845341"]
 
             ## 북 쉐어 리스트
+            """
             bookShareList = []
             user1 = {}
             user1['nickname'] = "닉네임1"
@@ -207,6 +233,8 @@ def book_info(id):
             user2['lat']="37.5535"
             user2['long']="126.842"
             bookShareList.append(user2)
+            """
+            bookShareList = getSharingUser(id, userLoc)
 
             ## 리뷰 리스트
             review = base.db.session.query(Ratings).join(Ratings.user).join(Ratings.review).filter(Ratings.book_id == id).all()

@@ -23,3 +23,15 @@ class BooksSchema(ma.Schema):
     image_url = fields.String()
     description = fields.String()
     average_rating = fields.String()
+
+
+class RatingsSchema(ma.Schema):
+    rating_id = fields.String()
+    user_id = fields.String()
+    book_id = fields.String()
+    rating = fields.String()
+    review_id = fields.String()
+
+class ReviewsSchema(ma.Schema):
+    review_id = fields.String()
+    review_TEXT = fields.String()

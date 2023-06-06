@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, session, request
 import os
 from flask_sqlalchemy import SQLAlchemy
 import base
+from sqlalchemy.orm import joinedload
 
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ base.db = SQLAlchemy(app)
 
 
 from models.user import Books ,Users, Ratings, Reviews, Authors
-from schemas.user import BooksSchema
+from schemas.user import BooksSchema, ReviewsSchema
 from flask import current_app , jsonify
 
 
@@ -168,16 +169,17 @@ def home():
 def book_info(id):
     if 'userID' in session:
         header='logout'
-
+        userID = session["userID"]
+        
         # 해당 책의 ID를 이용하여 책 상세 정보를 가져온다.
         book = base.db.session.query(Books).filter(Books.book_id == id).first()
         if book:
             author = base.db.session.query(Authors).filter(Authors.author_id == book.author_id).first()
-            book.author = author.name
+            book.authorName = author.name
+            
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정
-            userID = session["userID"]
-        
+            
             rating = Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == id).first()
             if rating is None:
                 userRating = 0
@@ -185,7 +187,10 @@ def book_info(id):
                 userRating = rating.rating
             
             ## 유저 위치 정보(북 쉐어 찾을 때 지도 중심 설정)
-            userLoc = ["37.553091", "126.845341"]
+            user = Users.query.filter(Users.user_id == userID).first()
+            #print(user.lat, user.long)
+            userLoc = [user.lat, user.long]
+            #userLoc = ["37.553091", "126.845341"]
 
             ## 북 쉐어 리스트
             bookShareList = []
@@ -204,31 +209,14 @@ def book_info(id):
             bookShareList.append(user2)
 
             ## 리뷰 리스트
+            review = base.db.session.query(Ratings).join(Ratings.user).join(Ratings.review).filter(Ratings.book_id == id).all()
             reviewList = []
-
-            review1 = {}
-            review1['nickname'] = '닉네임1'
-            review1['rating'] = '3'
-            review1['review'] = '재미있었다'
-            reviewList.append(review1)
-
-            review2 = {}
-            review2['nickname'] = '닉네임2'
-            review2['rating'] = '2'
-            review2['review'] = '노잼'
-            reviewList.append(review2)
-
-            review3 = {}
-            review3['nickname'] = '닉네임3'
-            review3['rating'] = '5'
-            review3['review'] = '최고입니다'
-            reviewList.append(review3)
-
-            review4 = {}
-            review4['nickname'] = '닉네임4'
-            review4['rating'] = '1.5'
-            review4['review'] = '개노잼'
-            reviewList.append(review4)
+            for row in review:
+                review = {}
+                review['nickname'] = row.user.nickname
+                review['rating'] = row.rating
+                review['review'] = row.review.review_TEXT
+                reviewList.append(review)
 
             return render_template("/bookinfo/bookinfo.html", status=header, book=book, id=id, userRating=userRating, userLoc = userLoc, bookShareList=bookShareList, reviewList=reviewList)
         else:
@@ -267,7 +255,7 @@ def insertRating():
     test_query = base.db.session.query(Ratings).count()
 
     ratings = {}
-    ratings['rating_id'] = int(test_query) + 27
+    ratings['rating_id'] = int(test_query) + 1
     ratings['user_id'] = session["userID"]
     ratings['book_id'] = request.form['bookID']
     ratings['rating'] = request.form['rating']
@@ -282,6 +270,22 @@ def insertRating():
 def writeReview(id):
     userID = session["userID"]
     review = request.form['reviewArea']
+    test_query = base.db.session.query(Reviews).count()
+    review_id = int(test_query) + 1
+    
+    ##rating 테이블과 연결
+    rating = Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == id).first()
+    rating.review_id = review_id
+    base.db.session.commit()
+    
+    ##review table에 저장
+    reviews = {}
+    reviews['review_id'] = review_id
+    reviews['review_TEXT'] = request.form['reviewArea']
+    reviews = Reviews(** reviews)
+    base.db.session.add(reviews)
+    base.db.session.commit()
+    
     print("review : ", id, userID, review)
     return redirect(url_for('book_info', id=id))
 

@@ -155,11 +155,9 @@
             </div>
             <div class="contentBelow">
                 <h2 class="sectionLabel">키워드</h2>
-                <h3 class="keyword">#판타지</h3>
-                <h3 class="keyword">#소설</h3>
-                <h3 class="keyword">#베스트셀러</h3>
-                <h3 class="keyword">#실사화</h3>
-                <h3 class="keyword">#해리</h3>
+                {% for keyword in keywords%}
+                <h3 class="keyword">#{{keyword}}</h3>
+                {% endfor %}
             </div>
             <div class="contentBelow">
                 <h2 class="sectionLabel">리뷰</h2>

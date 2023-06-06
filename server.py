@@ -3,6 +3,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import base
 from haversine import haversine
+import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -11,8 +12,7 @@ base.db = SQLAlchemy(app)
 
 
 from models.user import Books ,Users, Ratings, Reviews, Authors, Sharings
-from schemas.user import BooksSchema
-from flask import current_app , jsonify
+from flask import current_app
 
 
 @app.route('/index/')
@@ -21,26 +21,6 @@ def landing():
         return redirect(url_for('home'))
     else:
         return render_template("index.html")
-
-
-
-@app.route('/get_books/', methods=['GET'])
-def get_books():
-    """
-    메인 / 인덱스 페이지 에서 책들 평균 별점 높은것 가져오는 함수
-    실제 DB Books 에서는 평균 점수 컬럼이 있다 이것으로 보면 될지   / 1번 간단하게 가능
-    아니면 실제 이 웹사이트에서 사용자들이 남긴 평점으로 해야 하는것인지  /  2번 DB 구조 전체 변경 필요
-    아니면 레이팅 테이블에서 연동되어 있는 books id와 그룹핑을 맺어 계산 해야 하는것인지 알수없음  / 3번 그룹화 필요
-
-    3번 쿼리
-    SELECT rating, book_id, avg(rating) AS avg_rate FROM Ratings GROUP BY book_id order by avg_rate desc
-
-    지금 평균 점수 높은곳 100개로 작성 (1번 로직)
-    26번째 줄 100 변경하면 숫자 변경 가능
-    """
-    books_query = base.db.session.query(Books).order_by(Books.average_rating.desc())
-    books_data = BooksSchema().dump(books_query.limit(100), many=True)
-    return jsonify(books_data = books_data)
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -71,6 +51,8 @@ def login():
                 return render_template("/login/login.html", status=header, message='PASSWORD_NOT_FOUND')
             
             session["userID"] = user.user_id
+            session["userName"] = user.nickname
+
             current_app.logger.info("로그인 성공")
             return redirect(url_for('home'))
         
@@ -148,10 +130,50 @@ def idCheck():
 @app.route('/')
 def home():
     if 'userID'  in  session:
-        header='logout'
-        
+        userID = session["userID"]
+        header='logout'                
         seriesList = {}
         
+        print(userID)
+        recom = pd.read_csv('D:/BKMS1_project/book_recsys/results/book_rcmm/rec_result.csv', index_col=0)
+        
+        user_recommend = eval(recom.loc[str(userID), 'in_one'])
+        
+        title1 = f"{session['userName']}에게 추천하고픈 책!"
+        seriesList[title1] = base.db.session.query(Books).filter(Books.book_id.in_(user_recommend)).all()
+        # 위 코드에서 user_recommend 리스트의 book_id들과 일치하는 Books 테이블의 레코드들을 가져옵니다.
+
+        title2 = ""
+        for i in range(3):
+            title2 += f"#{eval(recom.loc[str(userID),'keywords'])[0][i]} "
+        keyword0 = eval(recom.loc[str(userID), 'book_ids'])[0]
+        seriesList[title2] = base.db.session.query(Books).filter(Books.book_id.in_(keyword0)).all()
+
+        title3 = ""
+        for i in range(3):
+            title3 += f"#{eval(recom.loc[str(userID),'keywords'])[1][i]} "
+        keyword1 = eval(recom.loc[str(userID), 'book_ids'])[1]
+        seriesList[title3] = base.db.session.query(Books).filter(Books.book_id.in_(keyword1)).all()
+        
+        title4 = ""
+        for i in range(3):
+            title4 += f"#{eval(recom.loc[str(userID),'keywords'])[2][i]} "
+        keyword2 = eval(recom.loc[str(userID), 'book_ids'])[2]
+        seriesList[title4] = base.db.session.query(Books).filter(Books.book_id.in_(keyword2)).all()
+
+        title5 = ""
+        for i in range(3):
+            title5 += f"#{eval(recom.loc[str(userID),'keywords'])[3][i]} "
+        keyword3 = eval(recom.loc[str(userID), 'book_ids'])[3]
+        seriesList[title5] = base.db.session.query(Books).filter(Books.book_id.in_(keyword3)).all()
+        
+        title6 = ""
+        for i in range(3):
+            title6 += f"#{eval(recom.loc[str(userID),'keywords'])[4][i]} "
+        keyword4 = eval(recom.loc[str(userID), 'book_ids'])[4]
+        seriesList[title6] = base.db.session.query(Books).filter(Books.book_id.in_(keyword4)).all()
+        
+        """
         title1 = "평균 별점이 높은 책"
         series = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(30)
         seriesList[title1] = []
@@ -164,11 +186,9 @@ def home():
             book['average_rating'] = row.average_rating
             #book['expectation'] = 3.5
             seriesList[title1].append(book)
-        
-        title2 = "취미"
-        seriesList[title2] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(30)
-        return render_template("/home/home.html", status=header, seriesList=seriesList)
+        """
 
+        return render_template("/home/home.html", status=header, seriesList=seriesList)
     else:
         return redirect(url_for('landing'))
 
@@ -202,16 +222,20 @@ def book_info(id):
             author = base.db.session.query(Authors).filter(Authors.author_id == book.author_id).first()
             book.authorName = author.name
             #book.expectation = 3.5
+
+            ## 키워드
+            review_keywords = pd.read_csv('D:/BKMS1_project/book_recsys/results/wordcloud/review_keywords.csv',index_col=0)
+            keywords = eval(dict(review_keywords.loc[id,:])['keywords'])[:5]
             
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정
-            
             rating = Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == id).first()
             if rating is None:
                 userRating = 0
             else :
                 userRating = rating.rating
             
+
             ## 유저 위치 정보(북 쉐어 찾을 때 지도 중심 설정)
             user = Users.query.filter(Users.user_id == userID).first()
             #print(user.lat, user.long)
@@ -231,7 +255,7 @@ def book_info(id):
                 review['review'] = row.review.review_TEXT
                 reviewList.append(review)
 
-            return render_template("/bookinfo/bookinfo.html", status=header, book=book, id=id, userRating=userRating, userLoc = userLoc, bookShareList=bookShareList, reviewList=reviewList)
+            return render_template("/bookinfo/bookinfo.html", status=header, book=book, id=id, userRating=userRating, userLoc = userLoc, bookShareList=bookShareList, reviewList=reviewList, keywords=keywords)
         else:
             return render_template("/error/404.html")
     else:

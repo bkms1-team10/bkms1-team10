@@ -33,8 +33,14 @@
             color: #919191;
         }
 
-        #rateInfo {
+        #averageRate {
+            display: contents;
             color: #313131;
+        }
+
+        #expectation {
+            display: contents;
+            color: #F52997;
         }
 
         hr {
@@ -111,10 +117,15 @@
                         <hr />
                     </div>
                     <div class="description-row">
-                        <h3 class="info" id="rateInfo">
-                            평균 ✨{{book.average_rating | float | round(1)}} ㆍ
-                            예상 ✨3.5
-                        </h3>
+                        <h3 class="info" id="averageRate">
+                            평균 ✨{{book.average_rating | float | round(1)}}
+                        {% if book.expectation != NULL %}
+                        ㆍ  </h3>
+                        <h3 class="info" id="expectation">
+                            예상 ✨{{book.expectation | float | round(1)}}
+                        {% endif %} 
+                        </h3>    
+                        
                         <hr />
                     </div>
                     <div class="description-row">

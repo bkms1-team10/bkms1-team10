@@ -151,11 +151,22 @@ def home():
         header='logout'
         
         seriesList = {}
+        
         title1 = "평균 별점이 높은 책"
-        seriesList[title1] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(100)       
+        series = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(30)
+        seriesList[title1] = []
+
+        for row in series:
+            book = {}
+            book['book_id'] = row.book_id
+            book['title'] = row.title
+            book['image_url'] = row.image_url
+            book['average_rating'] = row.average_rating
+            book['expectation'] = 3.5
+            seriesList[title1].append(book)
         
         title2 = "취미"
-        seriesList[title2] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(100)
+        seriesList[title2] = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(30)
         return render_template("/home/home.html", status=header, seriesList=seriesList)
 
     else:
@@ -190,6 +201,7 @@ def book_info(id):
         if book:
             author = base.db.session.query(Authors).filter(Authors.author_id == book.author_id).first()
             book.authorName = author.name
+            book.expectation = 3.5
             
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정

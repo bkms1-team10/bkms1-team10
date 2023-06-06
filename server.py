@@ -162,7 +162,7 @@ def home():
             book['title'] = row.title
             book['image_url'] = row.image_url
             book['average_rating'] = row.average_rating
-            book['expectation'] = 3.5
+            #book['expectation'] = 3.5
             seriesList[title1].append(book)
         
         title2 = "취미"
@@ -201,7 +201,7 @@ def book_info(id):
         if book:
             author = base.db.session.query(Authors).filter(Authors.author_id == book.author_id).first()
             book.authorName = author.name
-            book.expectation = 3.5
+            #book.expectation = 3.5
             
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정

@@ -14,9 +14,17 @@
         });
 
         $("#deleteBtn").click(function(){
-            location.href("/");
+            var book_id = $("#book_id").val();
+            location.href = "/deleteShareBook/"+book_id;
         });
+
     });
+
+    function showDeleteModal(book_id){
+        $("#deleteModal").css('display', 'block');
+        $("#book_id").val(book_id);
+    }
+    
     
 </script>
 
@@ -37,6 +45,7 @@
     <div id="deleteModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content" id="deleteModal-content">
+        <input type="hidden" id="book_id">
           <span id="deleteClose" class="close">&times;</span>
             <div class="space">
             <p>선택한 책을 목록에서 삭제하시겠습니까?</p>

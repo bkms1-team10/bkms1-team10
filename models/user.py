@@ -29,7 +29,7 @@ class Books(db.Model):
     description = db.Column(db.String(1000), nullable=True)
     average_rating = db.Column(db.String(1000), nullable=True)
     ratings = db.relationship('Ratings', backref='book', lazy=True)
-    sharings = db.relationship('Sharings', backref='books', lazy=True)
+    sharings = db.relationship('Sharings', backref='book', lazy=True)
 
 
 class Authors(db.Model):
@@ -50,5 +50,6 @@ class Reviews(db.Model):
     ratings = db.relationship('Ratings', backref='review', lazy=True)
 
 class Sharings(db.Model):
-    user_id = db.Column(db.String(1000), db.ForeignKey('users.user_id'), primary_key=True)
-    book_id = db.Column(db.String(1000), db.ForeignKey('books.book_id'), primary_key=True)
+    share_id = db.Column(db.String(1000), primary_key=True)
+    user_id = db.Column(db.String(1000), db.ForeignKey('users.user_id'))
+    book_id = db.Column(db.String(1000), db.ForeignKey('books.book_id'))

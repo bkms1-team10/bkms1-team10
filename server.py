@@ -169,15 +169,7 @@ def getSharingUser(book_id, user):
     bookShareList = []
     userLoc = (user[0], user[1])
     sharingUser = base.db.session.query(Sharings).join(Sharings.user).filter(Sharings.book_id == book_id).all()
-    """
-    for row in sharingUser:
-        user = {}
-        user['nickname'] = row.user.nickname
-        user['email'] = row.user.email
-        user['lat']=row.user.lat
-        user['long']=row.user.long
-        bookShareList.append(user)
-    """
+
     for row in sharingUser:
         sharingLoc = (row.user.lat, row.user.long)
         if  haversine(userLoc, sharingLoc) <= 10 :
@@ -218,22 +210,6 @@ def book_info(id):
             #userLoc = ["37.553091", "126.845341"]
 
             ## 북 쉐어 리스트
-            """
-            bookShareList = []
-            user1 = {}
-            user1['nickname'] = "닉네임1"
-            user1['email'] = "aaa@bbb.ccc"
-            user1['lat']="37.5537"
-            user1['long']="126.840"
-            bookShareList.append(user1)
-
-            user2 = {}
-            user2['nickname'] = "닉네임2"
-            user2['email'] = "ddd@eee.ffff"
-            user2['lat']="37.5535"
-            user2['long']="126.842"
-            bookShareList.append(user2)
-            """
             bookShareList = getSharingUser(id, userLoc)
 
             ## 리뷰 리스트
@@ -260,16 +236,7 @@ def deleteRating():
    
     Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == bookID).delete()
     base.db.session.commit()
-    
-    """
-    if rating is not None:
-        ratings = {}
-        ratings['user_id'] = session["userID"]
-        ratings['book_id'] = request.form['bookID']
-        ratings = Ratings(** ratings)
-        base.db.session.delete(ratings)
-        base.db.session.commit()
-    """
+
     print("delete : ", userID, bookID)
     
     return "Delete Rating"
@@ -342,29 +309,18 @@ def search():
 @app.route('/share/', methods=['GET', 'POST'])
 def share():
     if 'userID' in session:
+        userID = session["userID"]
         header='logout'
 
-        ##데이터 불러오기 예시
+        sharing = base.db.session.query(Sharings).join(Sharings.book).filter(Sharings.user_id == userID).all()
         bookList = []
-        book1 = {}
-        book1['book_id'] = "001"
-        book1['title']="해리포터와 마법사의 돌"
-        bookList.append(book1)
 
-        book2 = {}
-        book2['book_id'] = "002"
-        book2['title']="해리포터와 비밀의 방"
-        bookList.append(book2)
-
-        book3 = {}
-        book3['book_id'] = "003"
-        book3['title']="해리포터와 아즈카반의 죄수"
-        bookList.append(book3)
-
-        book4 = {}
-        book4['book_id'] = "004"
-        book4['title']="해리포터와 불의 잔"
-        bookList.append(book4)
+        for row in sharing:
+            book = {}
+            book['book_id'] = row.book_id
+            book['title'] = row.book.title
+            book['image_url'] = row.book.image_url
+            bookList.append(book)
         
         return render_template("/share/share.html", status=header, bookList=bookList)
 
@@ -375,40 +331,46 @@ def share():
 def searchShareBook():
     data = request.form['searchWord']
 
-    ##데이터 불러오기 예시
+    search = base.db.session.query(Books).join(Books.author).filter(Books.title.like("%"+data+"%")).all()
     searchList = []
-    book1 = {}
-    book1["id"] = "001"
-    book1["title"]="해리포터와 마법사의 돌"
-    book1["author"]="J.K 롤링"
-    searchList.append(book1)
 
-    book2 = {}
-    book2["id"] = "002"
-    book2["title"]="해리포터와 비밀의 방"
-    book2["author"]="J.K 롤링"
-    searchList.append(book2)
-
-    book3 = {}
-    book3["id"] = "003"
-    book3["title"]="해리포터와 아즈카반의 죄수"
-    book3["author"]="J.K 롤링"
-    searchList.append(book3)
-
-    book4 = {}
-    book4["id"] = "004"
-    book4["title"]="해리포터와 불의 잔"
-    book4["author"]="J.K 롤링"
-    searchList.append(book4)    
+    for row in search:
+        book = {}
+        book["id"] = row.book_id
+        book["title"] = row.title
+        book['author'] = row.author.name
+        searchList.append(book)
 
     return render_template("/share/tableCell.html", searchList=searchList)
 
 @app.route('/addShareBook/<string:book_id>', methods=['GET'])
 def addShareBook(book_id):
-    print(book_id);
+    userID = session["userID"]
+
+    test_query = base.db.session.query(Sharings).count()
+       
+    ##sharings table에 저장
+    sharing = {}
+    sharing['share_id'] = int(test_query) + 1
+    sharing['user_id'] = userID
+    sharing['book_id'] = book_id
+    sharing = Sharings(** sharing)
+
+    base.db.session.add(sharing)
+    base.db.session.commit()
+
+    print("ADD : ", book_id, userID)
     return redirect(url_for('share'))  
 
+@app.route('/deleteShareBook/<string:book_id>', methods=['GET'])
+def deleteShareBook(book_id):
+    userID = session["userID"]
 
+    Sharings.query.filter(Sharings.user_id == userID, Sharings.book_id == book_id).delete()
+    base.db.session.commit()
+
+    print("DELETE : ", book_id, userID)
+    return redirect(url_for('share')) 
 
 
 app.debug = True

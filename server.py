@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, session, request
 import os
 from flask_sqlalchemy import SQLAlchemy
 import base
-from haversine import haversine, Unit
+from haversine import haversine
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -11,7 +11,7 @@ base.db = SQLAlchemy(app)
 
 
 from models.user import Books ,Users, Ratings, Reviews, Authors, Sharings
-from schemas.user import BooksSchema, ReviewsSchema
+from schemas.user import BooksSchema
 from flask import current_app , jsonify
 
 
@@ -116,10 +116,7 @@ def join():
             users['id'] = request.form['userID']
             users['pw'] = request.form['password']
             users['nickname'] = request.form['username']
-            users['address'] = ""
-            users['address_gu'] = ""
-            users['address_dong'] = ""
-            users['lat_long'] = ""
+
             users['email'] = request.form['email']
             users['lat'] = request.form['lat']
             users['long'] = request.form['long']

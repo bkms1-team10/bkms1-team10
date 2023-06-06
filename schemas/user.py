@@ -9,9 +9,6 @@ class UsersSchema(ma.Schema):
     pw = fields.String()
     nickname = fields.String()
     address = fields.String()
-    address_gu = fields.String()
-    address_dong = fields.String()
-    lat_long = fields.String()
     lat = fields.String()
     long = fields.String()
 

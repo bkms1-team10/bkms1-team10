@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:\\project.db'
 base.db = SQLAlchemy(app)
 
 
-from models.user import Books ,Users, Ratings, Reviews
+from models.user import Books ,Users, Ratings, Reviews, Authors
 from schemas.user import BooksSchema
 from flask import current_app , jsonify
 
@@ -172,6 +172,8 @@ def book_info(id):
         # 해당 책의 ID를 이용하여 책 상세 정보를 가져온다.
         book = base.db.session.query(Books).filter(Books.book_id == id).first()
         if book:
+            author = base.db.session.query(Authors).filter(Authors.author_id == book.author_id).first()
+            book.author = author.name
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정
             userID = session["userID"]

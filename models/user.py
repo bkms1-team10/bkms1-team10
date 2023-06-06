@@ -29,6 +29,10 @@ class Books(db.Model):
     average_rating = db.Column(db.String(1000), nullable=True)
 
 
+class Authors(db.Model):
+    author_id = db.Column(db.String(1000), primary_key=True)
+    name = db.Column(db.String(1000), nullable=True)
+
 class Ratings(db.Model):
     rating_id = db.Column(db.String(1000), primary_key=True)
     user_id = db.Column(db.String(1000), nullable=False)

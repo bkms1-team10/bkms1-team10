@@ -122,9 +122,9 @@ def main():
     users_df['user_idx'] = users_df['user_idx'].fillna(0)
     users_df['user_idx'] = users_df['user_idx'].astype(int)
 
-    #  테스트로 일부만
-    ratings_df = ratings_df.iloc[:5000,:]
-    users_df = users_df[users_df['user_idx'].isin(list(ratings_df.user_idx))]
+    # #  테스트로 일부만
+    # ratings_df = ratings_df.iloc[:5000,:]
+    # users_df = users_df[users_df['user_idx'].isin(list(ratings_df.user_idx))]
     
     df_user_book_ratings = ratings_df.pivot(
         index='user_idx',

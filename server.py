@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, request 
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 import base
 from haversine import haversine
 import pandas as pd
@@ -134,59 +135,60 @@ def home():
         header='logout'                
         seriesList = {}
         
-        print(userID)
-        recom = pd.read_csv('D:/BKMS1_project/book_recsys/results/book_rcmm/rec_result.csv', index_col=0)
-        
-        user_recommend = eval(recom.loc[str(userID), 'in_one'])
-        
-        title1 = f"{session['userName']}에게 추천하고픈 책!"
-        seriesList[title1] = base.db.session.query(Books).filter(Books.book_id.in_(user_recommend)).all()
-        # 위 코드에서 user_recommend 리스트의 book_id들과 일치하는 Books 테이블의 레코드들을 가져옵니다.
+        try:
+            recom = pd.read_csv('D:/BKMS1_project/book_recsys/results/book_rcmm/rec_result.csv', index_col=0)
+            
+            user_recommend = eval(recom.loc[str(userID), 'in_one'])
+            
+            title1 = f"{session['userName']}에게 추천하고픈 책!"
+            seriesList[title1] = base.db.session.query(Books).filter(Books.book_id.in_(user_recommend)).all()
+            # 위 코드에서 user_recommend 리스트의 book_id들과 일치하는 Books 테이블의 레코드들을 가져옵니다.
 
-        title2 = ""
-        for i in range(3):
-            title2 += f"#{eval(recom.loc[str(userID),'keywords'])[0][i]} "
-        keyword0 = eval(recom.loc[str(userID), 'book_ids'])[0]
-        seriesList[title2] = base.db.session.query(Books).filter(Books.book_id.in_(keyword0)).all()
+            title2 = ""
+            for i in range(3):
+                title2 += f"#{eval(recom.loc[str(userID),'keywords'])[0][i]} "
+            keyword0 = eval(recom.loc[str(userID), 'book_ids'])[0]
+            seriesList[title2] = base.db.session.query(Books).filter(Books.book_id.in_(keyword0)).all()
 
-        title3 = ""
-        for i in range(3):
-            title3 += f"#{eval(recom.loc[str(userID),'keywords'])[1][i]} "
-        keyword1 = eval(recom.loc[str(userID), 'book_ids'])[1]
-        seriesList[title3] = base.db.session.query(Books).filter(Books.book_id.in_(keyword1)).all()
-        
-        title4 = ""
-        for i in range(3):
-            title4 += f"#{eval(recom.loc[str(userID),'keywords'])[2][i]} "
-        keyword2 = eval(recom.loc[str(userID), 'book_ids'])[2]
-        seriesList[title4] = base.db.session.query(Books).filter(Books.book_id.in_(keyword2)).all()
+            title3 = ""
+            for i in range(3):
+                title3 += f"#{eval(recom.loc[str(userID),'keywords'])[1][i]} "
+            keyword1 = eval(recom.loc[str(userID), 'book_ids'])[1]
+            seriesList[title3] = base.db.session.query(Books).filter(Books.book_id.in_(keyword1)).all()
+            
+            title4 = ""
+            for i in range(3):
+                title4 += f"#{eval(recom.loc[str(userID),'keywords'])[2][i]} "
+            keyword2 = eval(recom.loc[str(userID), 'book_ids'])[2]
+            seriesList[title4] = base.db.session.query(Books).filter(Books.book_id.in_(keyword2)).all()
 
-        title5 = ""
-        for i in range(3):
-            title5 += f"#{eval(recom.loc[str(userID),'keywords'])[3][i]} "
-        keyword3 = eval(recom.loc[str(userID), 'book_ids'])[3]
-        seriesList[title5] = base.db.session.query(Books).filter(Books.book_id.in_(keyword3)).all()
-        
-        title6 = ""
-        for i in range(3):
-            title6 += f"#{eval(recom.loc[str(userID),'keywords'])[4][i]} "
-        keyword4 = eval(recom.loc[str(userID), 'book_ids'])[4]
-        seriesList[title6] = base.db.session.query(Books).filter(Books.book_id.in_(keyword4)).all()
-        
-        """
-        title1 = "평균 별점이 높은 책"
-        series = base.db.session.query(Books).order_by(Books.average_rating.desc()).limit(30)
-        seriesList[title1] = []
+            title5 = ""
+            for i in range(3):
+                title5 += f"#{eval(recom.loc[str(userID),'keywords'])[3][i]} "
+            keyword3 = eval(recom.loc[str(userID), 'book_ids'])[3]
+            seriesList[title5] = base.db.session.query(Books).filter(Books.book_id.in_(keyword3)).all()
+            
+            title6 = ""
+            for i in range(3):
+                title6 += f"#{eval(recom.loc[str(userID),'keywords'])[4][i]} "
+            keyword4 = eval(recom.loc[str(userID), 'book_ids'])[4]
+            seriesList[title6] = base.db.session.query(Books).filter(Books.book_id.in_(keyword4)).all()
 
-        for row in series:
-            book = {}
-            book['book_id'] = row.book_id
-            book['title'] = row.title
-            book['image_url'] = row.image_url
-            book['average_rating'] = row.average_rating
-            #book['expectation'] = 3.5
-            seriesList[title1].append(book)
-        """
+        except :
+            title1 = "평균 별점이 높은 책"
+            stmt = base.db.session.query(Ratings.book_id).group_by(Ratings.book_id).having(func.count(Ratings.rating_id) > 200).subquery()
+            series = base.db.session.query(Books).join(stmt, stmt.c.book_id == Books.book_id).order_by(Books.average_rating.desc()).limit(10)
+            seriesList[title1] = []
+
+            for row in series:
+                book = {}
+                book['book_id'] = row.book_id
+                book['title'] = row.title
+                book['image_url'] = row.image_url
+                book['average_rating'] = row.average_rating
+                #book['expectation'] = 3.5
+                seriesList[title1].append(book)
+
 
         return render_template("/home/home.html", status=header, seriesList=seriesList)
     else:
@@ -224,9 +226,12 @@ def book_info(id):
             #book.expectation = 3.5
 
             ## 키워드
-            review_keywords = pd.read_csv('D:/BKMS1_project/book_recsys/results/wordcloud/review_keywords.csv',index_col=0)
-            keywords = eval(dict(review_keywords.loc[id,:])['keywords'])[:5]
-            
+            try:
+                review_keywords = pd.read_csv('D:/BKMS1_project/book_recsys/results/wordcloud/review_keywords.csv',index_col=0)
+                keywords = eval(dict(review_keywords.loc[id,:])['keywords'])[:5]
+            except:
+                keywords = None
+
             ## 유저가 이전에 기록한 평점이 있는지 확인
             ## 있다면 rating 지정
             rating = Ratings.query.filter(Ratings.user_id == userID, Ratings.book_id == id).first()
@@ -246,7 +251,7 @@ def book_info(id):
             bookShareList = getSharingUser(id, userLoc)
 
             ## 리뷰 리스트
-            review = base.db.session.query(Ratings).join(Ratings.user).join(Ratings.review).filter(Ratings.book_id == id).all()
+            review = base.db.session.query(Ratings).join(Ratings.user).join(Ratings.review).filter(Ratings.book_id == id, Ratings.rating != 0).all()
             reviewList = []
             for row in review:
                 review = {}

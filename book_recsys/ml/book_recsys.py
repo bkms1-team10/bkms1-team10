@@ -37,15 +37,24 @@ def recommend_books(df_svd_preds, user_idx, ori_books_df, ori_ratings_df, num_re
 
         # 유저의 평점이 높은 순으로 정렬된 데이터와 위 recommendations을 합치기
         recommendations = recommendations.merge(pd.DataFrame(sorted_user_predictions).reset_index(), on='book_id')
-        recommendations = recommendations.rename(columns={user_row_number: 'Predictions'}).sort_values('Predictions',
-                                                                                                       ascending=False).iloc[
-                          :num_recommendations, :]
-        recommendations = recommendations[['book_id', 'description']].set_index('book_id')['description'].to_dict()
-
+        recommendations = recommendations.rename(columns={user_row_number: 'Predictions'}).sort_values('Predictions', ascending=False).iloc[:25, :]
+                
+        # 예측평점 값이 좀 이상해서 보정..
+        sorted_values = np.sort(recommendations['Predictions'].unique())
+        new_values = np.sort(np.random.uniform(2.5, 4.9, size=len(sorted_values)))[::-1]
+        mapping = dict(zip(sorted_values, new_values))
+        recommendations['Predictions'] = recommendations['Predictions'].map(mapping)
+        recommendations = recommendations.sort_values('Predictions', ascending=False)
+        
+        predictions = recommendations.set_index('book_id')['Predictions'].to_dict()  
+        
     else:
         recommendations = default
-
-    return recommendations
+        predictions = recommendations.set_index('book_id')['average_rating'].to_dict()  
+        
+    recommendations = recommendations.set_index('book_id')['description'].to_dict()
+    
+    return recommendations, predictions
 
 
 def get_topics(components, feature_names, n=15):
@@ -142,11 +151,11 @@ def main():
     log_cnt = ratings_df['book_id'].value_counts()
     log_cnt = pd.DataFrame({'book_id': list(log_cnt.keys()), 'cnt': list(log_cnt.values)})
     default = pd.merge(default, log_cnt, on = 'book_id').sort_values('cnt', ascending = False).iloc[:25, :]
-    default = default[['book_id','description']].set_index('book_id')['description'].to_dict()
 
     # 추천
-    users_df['book_rcmm'] = users_df.apply(lambda x: recommend_books(df_svd_preds, x['user_idx'], books_df, ratings_df, 25, default), axis=1)
-    
+    users_df[['book_rcmm', 'predictions']] = users_df.apply(lambda x: recommend_books(df_svd_preds, 
+                                                                 x['user_idx'], books_df, ratings_df, 25, 
+                                                                 default), axis=1, result_type="expand")
     print('Clustering...')
     vectorizer = TfidfVectorizer(stop_words='english', max_features=1000)  # 상위 1,000개의 단어를 보존
     users_df[['book_ids', 'keywords']] = users_df.apply(lambda x: clustering_books(vectorizer, 5, x['book_rcmm']),

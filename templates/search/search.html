@@ -67,7 +67,7 @@
         <h2>도서 검색하기</h2>
         <form id="searchForm" action="/search/" method="POST">
             <span class='material-symbols-outlined'>Search</span>
-            <input type="text" class="field" id="searchWord" name="searchWord">
+            <input type="text" class="field" id="searchWord" name="searchWord" autocomplete="off">
         </form>
         {% if searched %}
         {% include '/search/searchResult.html' %}

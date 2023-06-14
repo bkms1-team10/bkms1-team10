@@ -91,11 +91,11 @@ def join():
             lat = request.form['lat']
             long = request.form['long']
 
-            test_query = base.db.session.query(Users).order_by(Users.user_id.desc())
-            test_query =test_query.first()
+            #test_query = base.db.session.query(Users).order_by(Users.user_id.desc())
+            #test_query =test_query.first()
             
             users = {}
-            users['user_id'] = int(test_query.id) + 1
+            users['user_id'] = request.form['userID']
             users['id'] = request.form['userID']
             users['pw'] = request.form['password']
             users['nickname'] = request.form['username']
@@ -385,11 +385,11 @@ def searchShareBook():
 def addShareBook(book_id):
     userID = session["userID"]
 
-    test_query = base.db.session.query(Sharings).count()
+    #test_query = base.db.session.query(Sharings).count()
        
     ##sharings table에 저장
     sharing = {}
-    sharing['share_id'] = int(test_query) + 1
+    sharing['share_id'] = ""+userID+book_id
     sharing['user_id'] = userID
     sharing['book_id'] = book_id
     sharing = Sharings(** sharing)
@@ -411,5 +411,5 @@ def deleteShareBook(book_id):
     return redirect(url_for('share')) 
 
 
-app.debug = True
+#app.debug = True
 app.run('127.0.0.1', port=5500)

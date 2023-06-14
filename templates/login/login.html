@@ -141,7 +141,7 @@ input:focus{
 		<h3>로그인</h3>
 		<div class="row">
 			<label class= "title">아이디</label>
-			<input type="text" class="field" id="userID" name="userID" autofocus>
+			<input type="text" class="field" id="userID" name="userID" autocomplete="off" autofocus>
 			{% if message == 'ID_NOT_FOUND' %}
 			<div id="msg_id" class="msg"> 존재하지 않는 아이디입니다.</div>
 			{% endif %}
